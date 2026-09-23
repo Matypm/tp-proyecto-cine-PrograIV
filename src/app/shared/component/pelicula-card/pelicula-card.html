@@ -1,0 +1,13 @@
+<div class="pelicula-card" (click)="verPelicula()">
+    <div class="img-container">
+        <img 
+            [src]="pelicula().imagen" 
+            [alt]="pelicula().nombre"
+        >
+
+    </div>
+    <div class="info-film">
+        <h3>{{pelicula().nombre}}</h3>
+        <span class="duracion">{{ formatearDuracion(pelicula().duracion) }}</span>
+    </div>
+</div>

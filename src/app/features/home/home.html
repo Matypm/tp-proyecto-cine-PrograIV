@@ -1,0 +1,18 @@
+<section class="home-container">
+    <h2>PELÍCULAS EN CARTELERA</h2>
+
+    <!-- Dsp incorporar la barra de busqueda -->
+    <app-searh-bar 
+        [(palabra)]="filtroBusqueda"
+        [(genero)]="filtroGenero"
+        [generos]="generos()"/>
+
+    <div class="peliculas-grid">
+        @for (pelicula of peliculasFiltradas(); track pelicula.id) {
+            <app-pelicula-card
+                [pelicula]="pelicula"
+                (seleccionada)="verFunciones($event)"
+            />
+        }
+    </div>
+</section>

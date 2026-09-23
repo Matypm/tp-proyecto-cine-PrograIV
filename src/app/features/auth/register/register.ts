@@ -22,7 +22,7 @@ export class Register {
     apellido: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     password: ['',[Validators.required, Validators.minLength(6)]],
-    fecha_nacimiento: ['', [Validators.required]]
+    fecha_nacimiento: ['', [Validators.required, Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]]
   })
 
   isLoading = signal(false);
@@ -40,7 +40,7 @@ export class Register {
 
     try{
       // ACA se crea la cuenta en Auth
-      const {data: dataAuth, error: errorAuth} = await this.authService.signUp(email!, password!, nombre!, apellido!)
+      const {data: dataAuth, error: errorAuth} = await this.authService.signUp(email!, password!, nombre!, apellido!, fecha_nacimiento!)
       
       if(errorAuth) throw errorAuth;
 
@@ -49,46 +49,45 @@ export class Register {
         return;
       }
   
-
       // ACA se crea la cuenta en mi tabla Usuarios
-      const { error: errorUsuario } = await this.supabase
-      .from('usuarios')
-      .insert([{
-        id: dataAuth.user!.id,
-        nombre,
-        apellido,
-        email,
-        fecha_nacimiento,
-        rol: 'cliente'
-      }])
+      // const { error: errorUsuario } = await this.supabase
+      // .from('usuarios')
+      // .insert([{
+      //   id: dataAuth.user!.id,
+      //   nombre,
+      //   apellido,
+      //   email,
+      //   fecha_nacimiento,
+      //   rol: 'cliente'
+      // }])
 
-      if(errorUsuario) throw errorUsuario;
+      // if(errorUsuario) throw errorUsuario;
       
-      // configuro el cupon para q sea de bienvenida
-      const {data: configCupon, error: errorConfig} = await this.supabase // tiene esta forma configCupon = { porcentaje_descuento: 20 }
-      .from('configuracion_cupones')
-      .select('porcentaje_descuento')
-      .eq('tipo', 'bienvenida')
-      .single();
+      // // configuro el cupon para q sea de bienvenida
+      // const {data: configCupon, error: errorConfig} = await this.supabase // tiene esta forma configCupon = { porcentaje_descuento: 20 }
+      // .from('configuracion_cupones')
+      // .select('porcentaje_descuento')
+      // .eq('tipo', 'bienvenida')
+      // .single();
 
-      if(errorConfig){
-        console.error('Ocurrio un error al leer la configuracion del cupon', errorConfig)
-      }
+      // if(errorConfig){
+      //   console.error('Ocurrio un error al leer la configuracion del cupon', errorConfig)
+      // }
 
-      const {error: errorCupon} = await this.supabase
-            .from('cupones')
-            .insert([{
-                usuario_id: dataAuth.user!.id,
-                tipo: 'bienvenida',
-                porcentaje_descuento: configCupon?.porcentaje_descuento ?? 20 // aca el ?. significa q si el configCupon tiene como valor null o undefined que por defecto se le aplique el valor 20
-            }]);
+      // const {error: errorCupon} = await this.supabase
+      //       .from('cupones')
+      //       .insert([{
+      //           usuario_id: dataAuth.user!.id,
+      //           tipo: 'bienvenida',
+      //           porcentaje_descuento: configCupon?.porcentaje_descuento ?? 20 // aca el ?. significa q si el configCupon tiene como valor null o undefined que por defecto se le aplique el valor 20
+      //       }]);
 
-        if(errorCupon) throw errorCupon;
+      //   if(errorCupon) throw errorCupon;
 
-        // 4. Actualizar la signal del perfil
-        await this.authService.cargarPerfil(dataAuth.user!.id); // el cargarPerfil hacia un select a la tabla usuarios para ver los datos de mi perfil
+        // // 4. Actualizar la signal del perfil
+        // await this.authService.cargarPerfil(dataAuth.user!.id); // el cargarPerfil hacia un select a la tabla usuarios para ver los datos de mi perfil
 
-        this.succesMessage.set("Registro exitoso");
+        this.succesMessage.set("Registro exitoso, confirme su email para confirmar su cuenta!!");
         this.registerForm.reset();
 
       } catch(error:any){

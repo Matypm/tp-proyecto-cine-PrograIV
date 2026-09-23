@@ -1,0 +1,45 @@
+.pelicula-card {
+    max-width:230px;
+    width: 100%;
+    height: 400px;
+    overflow: hidden; /*Todo lo q salga de la card va a ser redondeado */
+    border-radius: 15px;
+    background-color: #23211e;
+    transition: transform 0.10s ease;
+}
+
+.pelicula-card:hover{
+    transform: translateY(-3px);
+}
+
+.info-film{
+    padding: 10px 15px;
+}
+
+.info-film h3{
+    margin: 12px 0 20px;
+    height: 45px; 
+    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+.info-film span{
+    display: block;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    font-weight: bold;
+}
+
+.img-container {
+    position: relative;
+    width: 100%;
+}
+
+.img-container img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    display: block;
+}
+

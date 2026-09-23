@@ -37,7 +37,19 @@ export class Login {
       
       if(error) throw error;
 
-      this.router.navigate(['/home']);
+      const rol = this.authService.currentPerfil()?.rol;
+
+      switch(rol){
+        case 'admin': 
+          this.router.navigate(['/admin'])
+          break;
+        case 'cliente':
+          this.router.navigate(['/home'])
+          break;
+        case 'empleado': 
+        this.router.navigate(['/empleado'])
+      }
+
       } catch(error:any){
         this.errorMessage.set(error.message || 'Error al iniciar sesion')
       } finally{

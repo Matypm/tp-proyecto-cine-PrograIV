@@ -1,7 +1,8 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { SupabaseService } from './supabase-service';
-import { User, Session, AuthWeakPasswordError } from '@supabase/supabase-js';
+import { User, Session } from '@supabase/supabase-js';
 import { UsuarioInterface } from '../models/usuario.interface';
+
 
 @Injectable({
     providedIn: 'root'
@@ -30,7 +31,7 @@ export class AuthService {
         });
     }
 
-    async cargarPerfil(id: string){
+    async cargarPerfil(id: string){ // cargarPerfil me sirve para poder leer los datos de la tabla usuarios
         const {data, error} = await this.supabase
         .from('usuarios')
         .select('*')
@@ -38,7 +39,7 @@ export class AuthService {
         .single();
 
         if(error){
-            console.error('Error al cargar tu perfil')
+            console.error('Error al cargar tu perfil', error)
             return;
         }
         else{
@@ -47,19 +48,26 @@ export class AuthService {
         }
     }
 
-    async signUp(email: string, password: string, nombre: string, apellido: string){
+    async signUp(email: string, password: string, nombre: string, apellido: string, fecha_nacimiento: string){
         return this.supabase.auth.signUp({email, password,
             options:{
                 data:{
                     nombre: nombre,
-                    apellido: apellido
+                    apellido: apellido,
+                    fecha_nacimiento: fecha_nacimiento
                 }
             }
         });
     }
 
     async signIn(email: string, password: string){
-        return this.supabase.auth.signInWithPassword({email, password})
+        const resultado = await this.supabase.auth.signInWithPassword({email, password})
+
+        if(resultado.data.user){
+            await this.cargarPerfil(resultado.data.user.id)
+        }
+
+        return resultado;
     }
 
     async signOut(){

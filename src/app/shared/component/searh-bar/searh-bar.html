@@ -1,0 +1,25 @@
+<div class="search-container">
+    <input 
+        type="text"
+        [value]="palabra()"
+        (input)="palabra.set($any($event.target).value)"
+        placeholder="Buscar por nombre"
+        class="search-input">
+        @if (palabra()) {
+            <button (click)="limpiar()" class="clear-btn">X</button>
+        }
+    <select 
+        class="select-container" 
+        [value]="genero()"
+        (change)="genero.set($any($event.target).value)"
+        >
+        <option class="option-genero" value="">Géneros</option>
+        @for (genero of generos(); track genero.id) {
+            <option [value]="genero.id">
+                {{ genero.nombre }}
+            </option>
+           
+        }
+        
+    </select>
+</div>
