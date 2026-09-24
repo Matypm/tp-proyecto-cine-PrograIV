@@ -1,0 +1,22 @@
+<div class="detalle-container">
+    <section class="info-pelicula">
+
+        <div class="name-img-container">
+            <h2>{{ pelicula()?.nombre }}</h2>
+    
+            <img 
+                [src]="pelicula()?.imagen" 
+                [alt]="pelicula()?.nombre"
+            >
+        </div>
+
+        <div class="generos">
+            @for (genero of pelicula()?.pelicula_genero; track genero.genero_id) {
+                <h3>{{ genero.generos.nombre }}</h3>
+            }
+        </div>
+    </section>
+    
+
+
+</div>

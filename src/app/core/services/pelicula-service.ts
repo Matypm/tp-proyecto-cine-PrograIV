@@ -62,7 +62,7 @@ export class PeliculaService {
             console.error('Error al cargar peliculas desde Supabase: ', error);
         } else{
             this.peliculasSignal.set(data || []);
-            console.log(`Se cargaron ${data.length ?? 0} libros desde Supabase`);
+            console.log(`Se cargaron ${data.length ?? 0} peliculas desde Supabase`);
         }
 
         this.cargando.set(false);
