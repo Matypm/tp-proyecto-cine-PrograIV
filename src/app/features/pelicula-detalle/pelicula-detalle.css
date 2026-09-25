@@ -1,9 +1,23 @@
-.name-img-container{
+.detalle-container{
+    display: flex;
+    gap: 180px;
+}
+
+.info-pelicula{
     max-width: 290px;
+    margin: 2% 0 0 10%;
+}
+
+
+.horarios {
+    flex: 1;
+    margin-top: 8%;
+}
+
+.name-img-container{
     width: 100%;
 }
 .name-img-container img{
-    max-width: 290px;
     width: 100%;
     height: 450px;
     border-radius: 15px;
@@ -14,11 +28,112 @@
     color: white;
 }
 
-
 .generos h3{
     font-family: Arial, Helvetica, sans-serif;
     color: white;
     font-weight: bold;
+}
+
+.info-pelicula p{
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    font-weight: bold;
+}
+
+
+.horarios h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    margin-bottom: 25px;
+}
+
+
+/* DÍAS */
+
+.dias {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.dia {
+    background: #232323;
+    border: none;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 15px 35px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+}
+
+.dia:hover {
+    background-color: #333;
+}
+
+
+/* FUNCIONES */
+
+.funciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.horario {
+    min-width: 130px;
+    padding: 12px 18px;
+    border: none;
+    background-color: #232323;
+    /* border: 2px solid white; */
+    /* border-radius: 10px; */
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    transition: 0.2s;
+}
+
+.horario:hover {
+    background-color: white;
+    color: black;
+}
+
+.formato-idioma {
+    font-size: 12px;
+    font-weight: normal;
+}
+
+/* Media queries Responsive */
+
+@media (max-width: 900px) {
+
+    .detalle-container {
+        gap: 60px;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .detalle-container {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .info-pelicula {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
 }
 
 

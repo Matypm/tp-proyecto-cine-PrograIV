@@ -3,20 +3,63 @@
 
         <div class="name-img-container">
             <h2>{{ pelicula()?.nombre }}</h2>
-    
-            <img 
-                [src]="pelicula()?.imagen" 
-                [alt]="pelicula()?.nombre"
-            >
+
+            <img [src]="pelicula()?.imagen" [alt]="pelicula()?.nombre">
         </div>
 
         <div class="generos">
             @for (genero of pelicula()?.pelicula_genero; track genero.genero_id) {
-                <h3>{{ genero.generos.nombre }}</h3>
+            <h3>{{ genero.generos.nombre }}</h3>
             }
         </div>
+        <p>
+            {{ pelicula()?.sinopsis }}
+        </p>
+        <p>
+            Duración:
+            {{ pelicula() ? formatearDuracion(pelicula()!.duracion) : '' }}
+        </p>
+
     </section>
-    
+
+    <!-- HORARIOS -->
+    <section class="horarios">
+
+        <h2>FUNCIONES</h2>
+
+        <!-- DÍAS -->
+        <div class="dias">
+            @for (dia of diasDisponibles(); track dia.fecha) {
+                <button 
+                    class="dia"
+                    (click)="diaSeleccionado.set(dia.fecha)">
+                    <span>{{ dia.dia }}</span>
+                    <span>{{ dia.fecha }}</span>
+                    
+                </button>
+            }
+            <!-- <button class="dia">MIÉ<br>23/9</button>
+            <button class="dia">JUE<br>24/9</button>
+            <button class="dia">VIE<br>25/9</button> -->
+
+        </div>
+
+
+        <!-- FUNCIONES -->
+        <div class="funciones">
+            @for (funcion of funcionesDelDia(); track funcion.id) {
+                <button class="horario">
+                    {{ formatearFormaDeHora(funcion.fecha_hora) }}
+                    <small class="formato-idioma">
+                        {{ funcion.formato }} · {{ funcion.idioma }}
+                    </small>
+                </button>
+            }
+
+        </div>
+
+    </section>
+
 
 
 </div>

@@ -1,5 +1,8 @@
 .header-container{
     border-bottom: 2px solid rgb(73, 73, 73);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .logo h1{
@@ -9,4 +12,21 @@
     color: white;
     font-family: Arial, Helvetica, sans-serif;
     max-width: 2rem;
+}
+
+.login-btn {
+    background: transparent;
+    color: #f5c400;
+    border: 1px solid #f5c400;
+    border-radius: 6px;
+    padding: 9px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.login-btn:hover {
+    background: #f5c400;
+    color: #12100d;
 }

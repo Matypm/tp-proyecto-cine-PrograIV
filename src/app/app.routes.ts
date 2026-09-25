@@ -3,7 +3,7 @@ import { Home } from './features/home/home';
 import { Login } from './features/auth/login/login';
 import { Register } from './features/auth/register/register';
 import { authGuard } from './core/guards/auth.guard';
-import { authAdminGuard } from './core/guards/auth-admin-guard';
+import { AdminGuard } from './core/guards/admin-guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -18,6 +18,10 @@ export const routes: Routes = [
     },
 
     // Rutas para registrarse y loguearse
-    {path: 'login', component: Login},
-    {path: 'register', component: Register},
+    {path: 'login',
+        loadComponent: () => import('./features/auth/login/login').then(c => c.Login)
+    },
+    {path: 'register',
+        loadComponent: () => import('./features/auth/register/register').then(c => c.Register)
+    },
 ];

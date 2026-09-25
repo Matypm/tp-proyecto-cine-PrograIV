@@ -4,7 +4,7 @@ import { AuthService } from "../services/auth-service"
 
 
 
-export const authAdminGuard: CanActivateFn = (route, state) => {
+export const AdminGuard: CanActivateFn = (route, state) => {
     const authService = inject(AuthService);
     const router = inject(Router);
 
