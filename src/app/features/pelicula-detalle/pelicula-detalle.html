@@ -32,24 +32,23 @@
             @for (dia of diasDisponibles(); track dia.fecha) {
                 <button 
                     class="dia"
-                    (click)="diaSeleccionado.set(dia.fecha)">
+                    (click)="diaSeleccionado.set(dia.fecha); funcionSeleccionada.set(null)">
                     <span>{{ dia.dia }}</span>
                     <span>{{ dia.fecha }}</span>
                     
                 </button>
             }
-            <!-- <button class="dia">MIÉ<br>23/9</button>
-            <button class="dia">JUE<br>24/9</button>
-            <button class="dia">VIE<br>25/9</button> -->
-
         </div>
 
 
         <!-- FUNCIONES -->
         <div class="funciones">
             @for (funcion of funcionesDelDia(); track funcion.id) {
-                <button class="horario">
+                <button 
+                    class="horario"
+                    (click)="funcionSeleccionada.set(funcion.id!)">
                     {{ formatearFormaDeHora(funcion.fecha_hora) }}
+
                     <small class="formato-idioma">
                         {{ funcion.formato }} · {{ funcion.idioma }}
                     </small>
@@ -57,9 +56,13 @@
             }
 
         </div>
+        @if (funcionSeleccionada()) {
+            <button
+                class="comprar-btn"
+                (click)="comprarEntrada(funcionSeleccionada()!)">
+                COMPRAR ENTRADA
+            </button>
+        }
 
     </section>
-
-
-
 </div>

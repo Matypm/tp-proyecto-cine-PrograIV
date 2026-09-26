@@ -1,6 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { SupabaseService } from './supabase-service';
-import { FuncionInterface } from '../models/funcion.interface';
+import { FormatoPelicula, FuncionInterface, IdiomaPelicula } from '../models/funcion.interface';
+import { SalaInterface } from '../models/sala.cine.interface';
 
 @Injectable({
     providedIn: 'root'
@@ -11,7 +12,7 @@ export class FuncionesService {
 
     cargando = signal(false);
     funciones = signal<FuncionInterface[]>([]);
-    
+    salas = signal<SalaInterface[]>([]);
 
     constructor(){
         
@@ -34,6 +35,20 @@ export class FuncionesService {
             this.funciones.set(data || []);
         }
 
+    }
+
+    async obtenerFuncion(funcionId:string): Promise<FuncionInterface | null>{
+        const { data, error } = await this.supabase
+        .from('funciones')
+        .select('*')
+        .eq('id', funcionId)
+        .single()
+
+        if(error){
+            console.error('Error al obtener la funcion:', error);
+            return null;
+        }
+        return data;
     }
 
     // ===== LOGICA DE FUNCIONES + 30 MINS =====
@@ -106,11 +121,57 @@ export class FuncionesService {
 
         // Si no hay pisadas ni nada esta disponible la sala
         return true;
-
-
-
     }
 
-    
-    
+    async buscarSalaDisponible(fechaHora:string, duracion:number): Promise<string | null>{
+
+        const { data, error } = await this.supabase
+        .from('salas')
+        .select('*')
+
+        if(error){
+            console.error('Error al solicitar las salas', error);
+            return null;
+        }
+
+        for(const sala of data || []){
+            const disponible = await this.verDisponibilidadSala(sala.id, fechaHora, duracion);
+
+            if(disponible){
+                return sala.id;
+            }
+        }
+        return null;
+    }
+
+    async crearFuncion(peliculaId:string, fechaHora:string, formato:FormatoPelicula, idioma:IdiomaPelicula){
+
+        const { data, error } = await this.supabase
+        .from('pelicula')
+        .select('duracion')
+        .eq('id', peliculaId)
+        .single()
+
+        if(error){
+            console.error('Error al obtener la duracion de las peliculas', error);
+            return;
+        }
+
+        const salaDisponible = await this.buscarSalaDisponible(fechaHora, data?.duracion);
+
+        if(!salaDisponible){
+            console.error('No hay salas disponibles para crear la funcion');
+        } else {
+            await this.supabase
+            .from('funciones')
+            .insert({
+                pelicula_id: peliculaId,
+                sala_id: salaDisponible,
+                fecha_hora: fechaHora,
+                formato: formato,
+                idioma: idioma
+            });
+        }
+
+    } 
 }

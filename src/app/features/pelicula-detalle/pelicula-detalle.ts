@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, input, signal } from '@angular/cor
 import { PeliculaService } from '../../core/services/pelicula-service';
 import { Router } from '@angular/router';
 import { FuncionesService } from '../../core/services/funciones-service';
+import { CompraService } from '../../core/services/compra-service';
 
 @Component({
   imports: [],
@@ -15,9 +16,11 @@ export class PeliculaDetalle {
 
   private peliculaService = inject(PeliculaService);
   private funcionesService = inject(FuncionesService);
+  private compraService = inject(CompraService);
   private router = inject(Router);
 
   diaSeleccionado = signal('');
+  funcionSeleccionada = signal<string | null>(null);
 
   // computed() obtiene la película correspondiente al ID de la ruta.
   // Si las películas del servicio cambian, este computed se actualiza.
@@ -123,6 +126,11 @@ export class PeliculaDetalle {
 
     return fechasUnicas; // Este es el resultado que quiero que tenga diasDisponibles
   });
+
+  comprarEntrada(funcionId: string): void{
+    this.compraService.funcionSeleccionada.set(funcionId);
+    this.router.navigate(['/compra', funcionId]);
+  }
 
 
 
