@@ -40,7 +40,13 @@ export class FuncionesService {
     async obtenerFuncion(funcionId:string): Promise<FuncionInterface | null>{
         const { data, error } = await this.supabase
         .from('funciones')
-        .select('*')
+        .select(`
+            *,
+            salas (
+                id,
+                nombre
+            )
+        `)
         .eq('id', funcionId)
         .single()
 
@@ -48,6 +54,9 @@ export class FuncionesService {
             console.error('Error al obtener la funcion:', error);
             return null;
         }
+
+        console.log('Funcion obtenida:', data);
+
         return data;
     }
 

@@ -1,1 +1,84 @@
-<p>mapa-butacas works!</p>
+<div class="compra-container">
+
+    <section class="mapa-container">
+    
+        <h2 class="text-selecciona">SELECCIONA TU BUTACA</h2>
+        @for (fila of filas; track fila) {
+            <div class="mapa-fila">
+                <span class="nombre-fila">{{ fila }}</span>
+                
+                <div class="butacas-fila">
+                    @for (butaca of butacasPorFila(fila); track butaca.id) {
+                        <button 
+                            class="butaca"
+                            [class.pasillo-izquierdo]="butaca.columna === 4"
+                            [class.pasillo-derecho]="butaca.columna === 24"
+                            [class.accesible]="esButacaDiscapacidad(fila, butaca.columna)"
+                            [class.vip]="esVip(fila)"
+                            [class.seleccionada]="butacasSeleccionadas().includes(butaca.id!)"
+                            [class.ocupada]="butacaOcupada(butaca.id!)"
+                            [disabled]="butacaOcupada(butaca.id!)"
+                            (click)="seleccionarButaca(butaca.id!)"
+                        >
+                            {{ butaca.columna }}
+                        </button>
+                    }
+                </div>
+            
+            </div>
+        }
+    </section>
+    
+    <section class="resumen-container">
+    
+        <h3>TU COMPRA</h3>
+    
+        <div class="resumen-pelicula">
+            <span class="titulo-seccion">PELÍCULA</span>
+    
+            <strong>{{ pelicula()?.nombre }}</strong>
+    
+            <span>{{ funcion()?.formato }} · {{ funcion()?.idioma }}</span>
+        </div>
+    
+        <div class="separador"></div>
+    
+        <div class="resumen-funcion">
+            <span class="titulo-seccion">FUNCIÓN</span>
+    
+            <strong class="name-sala">{{ funcion()?.salas?.nombre }}</strong>
+    
+        <span>{{ formatearFechaResumenCompra(funcion()!.fecha_hora) }}</span>
+        </div>
+    
+        <div class="separador"></div>
+    
+        <div class="resumen-butacas">
+            <span class="titulo-seccion">BUTACAS</span>
+    
+            <div class="butacas-seleccionadas">
+                @for (butaca of nombreButacaSeleccionada(); track butaca.id) {
+                    <span>{{ butaca.fila }}{{ butaca.columna }}</span>
+                }
+                <!-- <span>J7</span>
+                <span>J8</span> -->
+            </div>
+        </div>
+    
+        <div class="compra-footer">
+            <div class="precio">
+                <strong class="precio-total">{{ precioTotal() }}</strong>
+            </div>
+    
+            <button
+                class="btn-continuar"
+                [disabled]="butacasSeleccionadas().length === 0"
+            >
+                CONTINUAR
+            </button>
+        </div>
+    
+    </section>
+</div>
+
+

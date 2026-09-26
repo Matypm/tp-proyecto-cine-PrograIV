@@ -8,4 +8,9 @@ export interface FuncionInterface {
     fecha_hora: string;
     formato: FormatoPelicula;
     idioma: IdiomaPelicula;
+
+    salas?: {
+    id: string;
+    nombre: string;
+}
 }
