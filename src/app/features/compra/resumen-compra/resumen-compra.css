@@ -1,0 +1,41 @@
+/* =================== */
+/* parte de resumen */
+
+.resumen-container {
+    width: 400px;
+    background-color: #151515;
+    /* border-radius: 0px; */
+    margin: 50px 50px 0px 0px;
+    /* box-sizing: border-box; */
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.resumen-container h3 {
+    font-size: 22px;
+}
+
+.resumen-pelicula,
+.resumen-funcion,
+.resumen-butacas {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.titulo-seccion {
+    font-size: 20px;
+    font-weight: bold;
+    color: #838383;
+    margin-bottom: 20px;
+}
+
+.precio-total {
+    font-size: 25px
+}
+
+.resumen-pelicula span:last-child,
+.resumen-funcion span:last-child {
+    font-size: 15px;
+    color: #ccc;
+    margin-top: 45px;
+}

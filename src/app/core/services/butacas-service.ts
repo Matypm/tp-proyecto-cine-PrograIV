@@ -17,7 +17,7 @@ export class ButacasService {
     // Las butacas que están ocupadas específicamente para esa función.
     butacasOcupadas = signal<ButacaFuncionInterface[]>([]);
 
-     private channel?: RealtimeChannel;
+    private channel?: RealtimeChannel;
 
     constructor(){
     }

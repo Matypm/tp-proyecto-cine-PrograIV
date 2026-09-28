@@ -1,0 +1,67 @@
+<div class="categorias">
+    @for (categoria of categorias(); track categoria.id) {
+    <button (click)="seleccionarCategoria(categoria.id!)" [class.seleccionada]="categoriaSeleccionada()">
+        {{ categoria.nombre }}
+    </button>
+    }
+</div>
+
+<section class="productos">
+    <h2>PRODUCTOS</h2>
+
+    <div class="productos-grid">
+        @for (producto of productosFiltrados(); track producto.id) {
+        <div class="producto-card">
+
+            <div class="producto-imagen">
+                <img [src]="producto.imagen" [alt]="producto.nombre">
+            </div>
+
+            <h3 class="nombre-prod">{{ producto.nombre }}</h3>
+
+            <span class="precio-prod">${{ producto.precio }}</span>
+
+            <button class="btn-add" (click)="agregarProducto(producto)">
+                +
+            </button>
+        </div>
+        }
+    </div>
+</section>
+<section class="resumen-container">
+
+    <h3>TU COMPRA</h3>
+
+    <div class="resumen-candy">
+        <span class="titulo-seccion">CANDY</span>
+
+        @for (item of prodsSeleccionados(); track item.producto.id) {
+
+            <div class="producto-resumen">
+
+                <img
+                    [src]="item.producto.imagen"
+                    [alt]="item.producto.nombre"
+                >
+
+                <div class="producto-info">
+                    <h4>{{ item.producto.nombre }}</h4>
+                    <h4>${{ item.producto.precio }}</h4>
+                </div>
+
+                <div class="cantidad">
+                    <button (click)="sacarProducto(item.producto)">-</button>
+                    <h4>{{ item.cantidad }}</h4>
+                    <button (click)="agregarProducto(item.producto)">+</button>
+                </div>
+
+            </div>
+
+        }
+        <div class="total-candy">
+            <h4>TOTAL: </h4>
+            <span>${{ precioTotalCandy() }}</span>
+        </div>
+    </div>
+
+</section>

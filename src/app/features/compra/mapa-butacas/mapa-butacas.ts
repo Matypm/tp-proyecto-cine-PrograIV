@@ -2,21 +2,23 @@ import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { CompraService } from '../../../core/services/compra-service';
 import { FuncionesService } from '../../../core/services/funciones-service';
 import { ButacasService } from '../../../core/services/butacas-service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ButacaInterface } from '../../../core/models/sala.cine.interface';
 import { FuncionInterface } from '../../../core/models/funcion.interface';
 import { PeliculasInterface } from '../../../core/models/pelicula.interface';
 import { PeliculaService } from '../../../core/services/pelicula-service';
+import { ResumenCompra } from '../resumen-compra/resumen-compra';
 
 @Component({
-  imports: [],
+  imports: [ResumenCompra],
   selector: 'app-mapa-butacas',
   styleUrl: './mapa-butacas.css',
   templateUrl: './mapa-butacas.html',
 })
 export class MapaButacas {
 
+  private router = inject(Router); 
   private route = inject(ActivatedRoute);
   private compraService = inject(CompraService);
   private funcionService = inject(FuncionesService);
@@ -24,7 +26,7 @@ export class MapaButacas {
   private destroyRef = inject(DestroyRef);
   private peliculaService = inject(PeliculaService);
 
-  butacasSeleccionadas = signal<string[]>([]);
+  butacasSeleccionadas = this.compraService.butacasSeleccionadas;
   funcion = signal<FuncionInterface | null>(null);
   pelicula = signal<PeliculasInterface | null>(null);
 
@@ -35,8 +37,8 @@ export class MapaButacas {
     'P', 'Q', 'R', 'S', 'T'
   ];
 
-  precioNormal = 10000;
-  precioVip = 17000;
+  // precioNormal = 10000;
+  // precioVip = 17000;
 
 
   constructor(){
@@ -50,19 +52,14 @@ export class MapaButacas {
     
   }
 
-  preciodeButaca(butaca: ButacaInterface): number {
-    if(this.esVip(butaca.fila)){
-      return this.precioVip;
-    }
+  // preciodeButaca(butaca: ButacaInterface): number {
+  //   if(this.esVip(butaca.fila)){
+  //     return this.precioVip;
+  //   }
 
-    return this.precioNormal;
-  }
+  //   return this.precioNormal;
+  // }
 
-  precioTotal(): number {
-    return this.nombreButacaSeleccionada().reduce((total, butaca) => {
-      return total + this.preciodeButaca(butaca);
-    }, 0);
-  }
 
   butacasPorFila(fila:string){
     return this.butacasService.butacas()
@@ -89,7 +86,7 @@ export class MapaButacas {
 }
 
   esVip(fila:string): boolean{
-    return fila === 'R' || fila === 'S' || fila === 'T';
+    return this.compraService.esVip(fila);
   }
 
   seleccionarButaca(butacaId: string): void {
@@ -168,17 +165,7 @@ export class MapaButacas {
     
   }
 
-  formatearFechaResumenCompra(fecha: string): string {
-    const fechaFormateada = new Date(fecha);
 
-    return new Intl.DateTimeFormat('es-AR', {
-        weekday: 'long',
-        day: '2-digit',
-        month: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-    }).format(fechaFormateada).replace('-', '/');
-}
+  
 }
 

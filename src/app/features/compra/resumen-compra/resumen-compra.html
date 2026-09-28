@@ -1,0 +1,66 @@
+<!-- <h2>TU COMPRA</h2>
+
+<h3>BUTACAS</h3>
+
+@for (butaca of butacas(); track butaca.id) {
+
+    <div class="butaca-resumen">
+
+        <span>
+            {{ butaca.fila }}{{ butaca.columna }}
+        </span>
+
+        <span>
+            {{ precioDeButaca(butaca) }}
+        </span>
+
+    </div>
+} -->
+<!-- <section class="resumen-container"> -->
+    
+        <h3>TU COMPRA</h3>
+    
+        <div class="resumen-pelicula">
+            <span class="titulo-seccion">PELÍCULA</span>
+    
+            <strong>{{ pelicula()?.nombre }}</strong>
+    
+            <span>{{ funcion()?.formato }} · {{ funcion()?.idioma }}</span>
+        </div>
+    
+    
+        <div class="resumen-funcion">
+            <span class="titulo-seccion">FUNCIÓN</span>
+    
+            <strong class="name-sala">{{ funcion()?.salas?.nombre }}</strong>
+    
+        <span>{{ formatearFechaResumenCompra(funcion()!.fecha_hora) }}</span>
+        </div>
+    
+    
+        <div class="resumen-butacas">
+            <span class="titulo-seccion">BUTACAS</span>
+    
+            <div class="butacas-seleccionadas">
+                @for (butaca of butacasSeleccionadas(); track butaca.id) {
+                    <span>{{ butaca.fila }}{{ butaca.columna }}</span>
+                    <!-- <span>{{  }}</span> -->
+                }
+            </div>
+        </div>
+    
+        <div class="compra-footer">
+            <div class="precio">
+                <strong class="precio-total">{{ precioTotal() }}</strong>
+            </div>
+    
+            <button
+                class="btn-continuar"
+                [disabled]="butacasSeleccionadas().length === 0"
+                (click)="navegarCandybar()"
+            >
+                CONTINUAR
+            </button>
+        </div>
+    
+    <!-- </section> -->
