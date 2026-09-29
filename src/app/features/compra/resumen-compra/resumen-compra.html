@@ -1,66 +1,86 @@
-<!-- <h2>TU COMPRA</h2>
+<section class="resumen-compra">
 
-<h3>BUTACAS</h3>
-
-@for (butaca of butacas(); track butaca.id) {
-
-    <div class="butaca-resumen">
-
-        <span>
-            {{ butaca.fila }}{{ butaca.columna }}
-        </span>
-
-        <span>
-            {{ precioDeButaca(butaca) }}
-        </span>
-
+    <h3>TU COMPRA</h3>
+    
+    <div class="resumen-pelicula">
+        <span class="titulo-seccion">PELÍCULA</span>
+    
+        <strong>{{ pelicula()?.nombre }}</strong>
+    
+        <span>{{ funcion()?.formato }} · {{ funcion()?.idioma }}</span>
     </div>
-} -->
-<!-- <section class="resumen-container"> -->
     
-        <h3>TU COMPRA</h3>
     
-        <div class="resumen-pelicula">
-            <span class="titulo-seccion">PELÍCULA</span>
+    <div class="resumen-funcion">
+        <span class="titulo-seccion">FUNCIÓN</span>
     
-            <strong>{{ pelicula()?.nombre }}</strong>
+        <strong class="name-sala">{{ funcion()?.salas?.nombre }}</strong>
     
-            <span>{{ funcion()?.formato }} · {{ funcion()?.idioma }}</span>
+        @if (funcion()) {
+            <span>{{ formatearFechaResumenCompra(funcion()!.fecha_hora) }}</span>
+        }
+    </div>
+    
+    
+    <div class="resumen-butacas">
+        <span class="titulo-seccion">BUTACAS</span>
+    
+        <div class="butacas-seleccionadas">
+            @for (butaca of butacasSeleccionadas(); track butaca.id) {
+            <span>{{ butaca.fila }}{{ butaca.columna }}</span>
+            <!-- <span>{{  }}</span> -->
+            }
         </div>
+    </div>
     
-    
-        <div class="resumen-funcion">
-            <span class="titulo-seccion">FUNCIÓN</span>
-    
-            <strong class="name-sala">{{ funcion()?.salas?.nombre }}</strong>
-    
-        <span>{{ formatearFechaResumenCompra(funcion()!.fecha_hora) }}</span>
-        </div>
-    
-    
-        <div class="resumen-butacas">
-            <span class="titulo-seccion">BUTACAS</span>
-    
-            <div class="butacas-seleccionadas">
-                @for (butaca of butacasSeleccionadas(); track butaca.id) {
-                    <span>{{ butaca.fila }}{{ butaca.columna }}</span>
-                    <!-- <span>{{  }}</span> -->
-                }
+    <!-- == CanndyBar == -->
+    @if (prodsSeleccionados().length > 0) {
+        <div class="resumen-candy">
+            <span class="titulo-seccion">CANDYBAR</span>
+        
+            @for (item of prodsSeleccionados(); track item.producto.id) {
+        
+            <div class="producto-seleccionado">
+        
+                <strong>{{ item.producto.nombre }}</strong>
+        
+                <div class="cantidad-control">
+                    <button (click)="sacarProducto(item.producto)">-</button>
+        
+                    <span>{{ item.cantidad }}</span>
+        
+                    <button (click)="agregarProducto(item.producto)">+</button>
+                </div>
+        
+                <span>
+                    ${{ item.producto.precio * item.cantidad }}
+                </span>
+        
             </div>
+        
+            }
+        </div>
+     }
+    
+    <!-- == Total y Continuar == -->
+    <div class="compra-footer">
+        <div class="precio">
+            <strong class="precio-total">${{ precioTotal() }}</strong>
         </div>
     
-        <div class="compra-footer">
-            <div class="precio">
-                <strong class="precio-total">{{ precioTotal() }}</strong>
-            </div>
-    
-            <button
-                class="btn-continuar"
-                [disabled]="butacasSeleccionadas().length === 0"
-                (click)="navegarCandybar()"
-            >
+        <button 
+            class="btn-continuar" 
+            [disabled]="pantalla() === 'butacas' && butacasSeleccionadas().length === 0" 
+            (click)="navegarBtnContinuar()"
+        >
+            @if(pantalla() === 'pago'){
+                PAGAR
+            } @else {
                 CONTINUAR
-            </button>
-        </div>
-    
-    <!-- </section> -->
+            }
+        </button>
+    </div>
+</section>
+
+
+<!-- </section> -->

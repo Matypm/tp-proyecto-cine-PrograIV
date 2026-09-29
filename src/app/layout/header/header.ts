@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router'; 
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router'; 
+import { AuthService } from '../../core/services/auth-service';
 
 @Component({
   imports: [RouterLink, RouterLinkActive],
@@ -7,4 +8,13 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './header.css',
   templateUrl: './header.html',
 })
-export class Header {}
+export class Header {
+
+  authService = inject(AuthService);
+  private router = inject(Router);
+
+  async logout(){
+    await this.authService.signOut();
+    this.router.navigate(['/home']);
+  }
+}

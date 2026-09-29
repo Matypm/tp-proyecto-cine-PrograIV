@@ -30,7 +30,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/compra/mapa-butacas/mapa-butacas').then(c => c.MapaButacas)
     },
     {
-        path: 'candybar',
+        path: 'candybar/:funcionId',
         loadComponent: () => import('./features/compra/candybar/candybar').then(c => c.Candybar)
+    },
+    {
+        path: 'pago/:funcionId',
+        loadComponent: () => import('./features/compra/pago/pago').then(c => c.Pago)
     }
 ];

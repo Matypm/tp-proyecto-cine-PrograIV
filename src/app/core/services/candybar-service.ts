@@ -1,6 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { SupabaseService } from './supabase-service';
 import { CategoriaCandyInterface, ProductosInterface } from '../models/candy_bar.interface';
+import { CompraService } from './compra-service';
 
 
 @Injectable({

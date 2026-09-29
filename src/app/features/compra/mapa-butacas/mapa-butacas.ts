@@ -132,6 +132,7 @@ export class MapaButacas {
         console.error('No hay funcion seleccionada');
         return;
       }
+      this.compraService.funcionSeleccionada.set(funcionId);
   
       const funcion = await this.funcionService.obtenerFuncion(funcionId);
       
@@ -150,7 +151,10 @@ export class MapaButacas {
       console.log('Sala: ', funcion.sala_id)
   
       await this.butacasService.obtenerButacasSala(funcion.sala_id);
-  
+      console.log('Butacas en el service:', this.butacasService.butacas());
+      console.log('Primera butaca:', this.butacasService.butacas()[0]);
+console.log('Cantidad fila A:', this.butacasPorFila('A').length);
+
       await this.butacasService.obtenerButacasOcupadas(funcion.id!)
   
       this.butacasService.iniciarRealtime(funcionId);
@@ -164,8 +168,5 @@ export class MapaButacas {
     })
     
   }
-
-
-  
 }
 

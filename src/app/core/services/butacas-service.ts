@@ -33,6 +33,7 @@ export class ButacasService {
             return;
         }
 
+        console.log('Butacas obtenidas', data);
         this.butacas.set(data || []);
     }
 
@@ -47,6 +48,7 @@ export class ButacasService {
             return;
         }
 
+        console.log('Butacas ocupadas:', data);
         this.butacasOcupadas.set(data || []);
     }
 
@@ -88,9 +90,4 @@ export class ButacasService {
             this.channel = undefined;
         }
     }
-    
-
-
-
-
 }

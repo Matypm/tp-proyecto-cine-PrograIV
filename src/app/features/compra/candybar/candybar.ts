@@ -3,23 +3,38 @@ import { CategoriaCandyInterface, ProductoCompraInterface, ProductosInterface } 
 import { SupabaseService } from '../../../core/services/supabase-service';
 import { CandybarService } from '../../../core/services/candybar-service';
 import { CompraService } from '../../../core/services/compra-service';
+import { ResumenCompra } from '../resumen-compra/resumen-compra';
+import { FuncionesService } from '../../../core/services/funciones-service';
+import { PeliculaService } from '../../../core/services/pelicula-service';
+import { PeliculasInterface } from '../../../core/models/pelicula.interface';
+import { FuncionInterface } from '../../../core/models/funcion.interface';
+import { ActivatedRoute, Router } from '@angular/router';
+import { errorContext } from 'rxjs/internal/util/errorContext';
+import { ButacasService } from '../../../core/services/butacas-service';
 
 @Component({
-  imports: [],
+  imports: [ResumenCompra],
   selector: 'app-candybar',
   styleUrl: './candybar.css',
   templateUrl: './candybar.html',
 })
 export class Candybar {
 
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private compraService = inject(CompraService);
   private candybarService = inject(CandybarService);
+  private funcionService = inject(FuncionesService);
+  private peliculaService = inject(PeliculaService);
+  private butacasService = inject(ButacasService);
 
   categorias = this.candybarService.categorias;
   productos = this.candybarService.productos;
+  prodsSeleccionados = this.compraService.prodsSeleccionados;
 
   categoriaSeleccionada = signal<string | null>(null);
-  prodsSeleccionados = this.compraService.prodsSeleccionados;
+  pelicula = signal<PeliculasInterface | null>(null);
+  funcion = signal<FuncionInterface | null>(null);
 
   productosFiltrados = computed(() => {
     return this.productos().filter(producto => producto.categoria_id === this.categoriaSeleccionada());
@@ -27,6 +42,8 @@ export class Candybar {
 
 
   constructor(){
+    this.cargarFuncion();
+
     effect(() => {
       const categorias = this.categorias();
       // Guardamos la categoría actualmente seleccionada
@@ -39,65 +56,53 @@ export class Candybar {
     });
   }
 
+  async cargarFuncion(){
+    // Obtenemos los parametros de la ruta actual
+    // ej: candybar/:funcionId, funcionId es el parametro de ruta
+    // y los escuchamos con suscribe
+    this.route.paramMap.subscribe(async params => {
+      
+      //buscamos dentro de los parámetros el que se llama funcionId
+      const funcionId = params.get('funcionId');
+
+      if(!funcionId){
+        console.error('No hay ninguna funcion seleccionada');
+        return;
+      }
+
+      // Guarda el id en el signal de compraService
+      this.compraService.funcionSeleccionada.set(funcionId);
+
+      // aca guardamos la funcion(Objecto) entera, no solo el id
+      // y con obtener funcion reconocemos la funcion q esta en Supabase
+      const funcion = await this.funcionService.obtenerFuncion(funcionId);
+
+      if(!funcion){
+        return;
+      }
+      // Guardamos el objeto funcion en el signal
+      this.funcion.set(funcion);
+
+      // Cargamos todas las butacas de la sala de esta función
+      await this.butacasService.obtenerButacasSala(funcion.sala_id);
+
+      // agarramos el id de pelicula q esta en el objeto Funcion
+      // para dsp q getPeliculaById nos devuelva un signal q lo guardamos en pelicula
+      const pelicula = this.peliculaService.getPeliculaById(funcion.pelicula_id);
+      // seteamos en el signal pelicula la pelicula q nos devolvio getPeliculaById
+      this.pelicula.set(pelicula()!);
+   });
+  }
+
   seleccionarCategoria(id: string): void {
     this.categoriaSeleccionada.set(id);
   }
 
   agregarProducto(producto: ProductosInterface){
-    const seleccionados = this.prodsSeleccionados();
-
-    // El find() busca dentro de este array un elemento que cumpla esta condición
-    const prodExistente = seleccionados.find(
-      itemSeleccionado => itemSeleccionado.producto.id === producto.id);
-
-    // aca si el prod ya existe en en el array de seleccionados
-    // le sumamos 1 de cantidad, si no lo dejamos como esta
-    if(prodExistente){
-      this.prodsSeleccionados.update(productosActuales => productosActuales.map(
-        item => item.producto.id === producto.id
-        ? {...item, cantidad: item.cantidad + 1} : item
-      )
-    );
-    } 
-    // en esta parte le seteamos 1 de cantidad al producto
-    // pq es la primera vez q se esta agregando a la compra
-    else {
-      this.prodsSeleccionados.update(productos => [
-        ...productos,
-        {
-          producto: producto,
-          cantidad: 1
-        }
-      ]);
-    }
+    // creo el metodo aca tmb y solamente llamo al de compraService
+    this.compraService.agregarProducto(producto);
   }
 
-  sacarProducto(producto: ProductosInterface){
-    const seleccionados = this.prodsSeleccionados();
-
-    const indice = seleccionados.findIndex(
-      item => item.producto.id === producto.id
-    );
-
-    // Si no encontro ninguno con esa condicion sale de la funcion
-    if(indice === -1){
-      return;
-    }
-
-    // Si tiene más de una unidad, recorro el array y
-    // disminuyo en 1 la cantidad del producto seleccionado.
-    if(seleccionados[indice].cantidad > 1){
-      this.prodsSeleccionados.update(productos => 
-        productos.map((item, i) => 
-          i === indice ? {...item, cantidad: item.cantidad - 1} : item)
-      );
-    }
-    else{
-      this.prodsSeleccionados.update(productos => 
-        productos.filter((_item, i) => i !== indice)
-      );
-    }
-  }
 
   precioTotalCandy = computed(() => {
     const productos = this.prodsSeleccionados();
@@ -115,10 +120,5 @@ export class Candybar {
 
     return total;
   })
-
-
-
-
-
 
 }

@@ -3,6 +3,12 @@
         <h1>LA12·CINEMA</h1>
     </div>
     <div>
+        @if (authService.currentUser()) {
+            <button (click)="logout()">
+                CERRAR SESIÓN
+            </button>
+        }
+
         <button 
             class="login-btn"
             routerLink="/login"

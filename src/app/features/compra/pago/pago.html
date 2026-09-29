@@ -1,0 +1,94 @@
+<div class="pago-container">
+
+    <section class="informacion-pago">
+
+        <h2>INFORMACIÓN DE PAGO</h2>
+
+        @if (currentUser()) {
+            <div class="datos-cliente">
+
+                <div class="campo">
+                    <label>Nombre</label>
+                    <input
+                        type="text"
+                        [value]="currentPerfil()?.nombre"
+                        readonly>
+                </div>
+
+                <div class="campo">
+                    <label>Apellido</label>
+                    <input
+                        type="text"
+                        [value]="currentPerfil()?.apellido"
+                        readonly>
+                </div>
+
+                <div class="campo campo-email">
+                    <label>Email</label>
+                    <input
+                        type="email"
+                        [value]="currentUser()?.email"
+                        readonly>
+                </div>
+
+            </div>
+         } @else {   <!-- si no hay sesion iniciada hacemos q el cliente minimo ingrese estos 3 datos -->
+            <form [formGroup]="formCliente">
+                <div class="datos-cliente">
+        
+                    <div class="campo">
+                        <label>Nombre</label>
+                        <input 
+                            type="text"
+                            formControlName="nombre"
+                            placeholder="Ingresá tu nombre">
+                    </div>
+        
+                    <div class="campo">
+                        <label>Apellido</label>
+                        <input 
+                            type="text"
+                            formControlName="apellido"
+                            placeholder="Ingresá tu apellido">
+                    </div>
+        
+                    <div class="campo campo-email">
+                        <label>Email</label>
+                        <input 
+                            type="email"
+                            formControlName="email"
+                            placeholder="Ingresá tu email">
+                    </div>
+        
+                </div>
+            </form>
+        }
+
+        <div class="cupon">
+
+            <h3>CUPÓN</h3>
+
+            <div class="cupon-form">
+
+                <input
+                    type="text"
+                    placeholder="Ingresá tu cupón">
+
+                <button type="button">
+                    APLICAR
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <app-resumen-compra
+        [funcion]="funcion()"
+        [pelicula]="pelicula()"
+        pantalla="pago"
+    >
+    </app-resumen-compra>
+
+</div>
