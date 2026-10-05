@@ -1,86 +1,100 @@
 <section class="resumen-compra">
 
     <h3>TU COMPRA</h3>
-    
+
     <div class="resumen-pelicula">
         <span class="titulo-seccion">PELÍCULA</span>
-    
+
         <strong>{{ pelicula()?.nombre }}</strong>
-    
+
         <span>{{ funcion()?.formato }} · {{ funcion()?.idioma }}</span>
     </div>
-    
-    
+
+
     <div class="resumen-funcion">
         <span class="titulo-seccion">FUNCIÓN</span>
-    
+
         <strong class="name-sala">{{ funcion()?.salas?.nombre }}</strong>
-    
+
         @if (funcion()) {
-            <span>{{ formatearFechaResumenCompra(funcion()!.fecha_hora) }}</span>
+        <span>{{ formatearFechaResumenCompra(funcion()!.fecha_hora) }}</span>
         }
     </div>
-    
-    
+
+
     <div class="resumen-butacas">
         <span class="titulo-seccion">BUTACAS</span>
-    
+
         <div class="butacas-seleccionadas">
             @for (butaca of butacasSeleccionadas(); track butaca.id) {
-            <span>{{ butaca.fila }}{{ butaca.columna }}</span>
-            <!-- <span>{{  }}</span> -->
+            <span class="butaca-chip">{{ butaca.fila }}{{ butaca.columna }}</span>
             }
         </div>
     </div>
-    
+
     <!-- == CanndyBar == -->
     @if (prodsSeleccionados().length > 0) {
-        <div class="resumen-candy">
-            <span class="titulo-seccion">CANDYBAR</span>
-        
-            @for (item of prodsSeleccionados(); track item.producto.id) {
-        
-            <div class="producto-seleccionado">
-        
-                <strong>{{ item.producto.nombre }}</strong>
-        
+    <div class="resumen-candy">
+        <span class="titulo-seccion">CANDYBAR</span>
+
+        @for (item of prodsSeleccionados(); track item.producto.id) {
+
+        <div class="producto-seleccionado">
+
+            <img class="producto-thumb" [src]="item.producto.imagen" [alt]="item.producto.nombre">
+
+            <div class="producto-info">
+                <strong class="producto-nombre">{{ item.producto.nombre }}</strong>
+
                 <div class="cantidad-control">
-                    <button (click)="sacarProducto(item.producto)">-</button>
-        
+                    <button (click)="sacarProducto(item.producto)">−</button>
                     <span>{{ item.cantidad }}</span>
-        
                     <button (click)="agregarProducto(item.producto)">+</button>
                 </div>
-        
-                <span>
-                    ${{ item.producto.precio * item.cantidad }}
-                </span>
-        
             </div>
-        
-            }
+
+            <span class="producto-precio">${{ item.producto.precio * item.cantidad }}</span>
+
         </div>
-     }
-    
+
+        }
+    </div>
+    }
+
     <!-- == Total y Continuar == -->
     <div class="compra-footer">
-        <div class="precio">
+        @if (cuponAplicado()) {
+
+        <div class="fila-precio">
+            <span>SUBTOTAL</span>
+            <span>${{ precioSubtotal() }}</span>
+        </div>
+
+        <div class="fila-precio descuento">
+            <span>DESCUENTO</span>
+            <span>-${{ precioDescuento() }}</span>
+        </div>
+
+        <div class="separador"></div>
+
+        <div class="fila-precio">
+            <strong>TOTAL FINAL</strong>
             <strong class="precio-total">${{ precioTotal() }}</strong>
         </div>
-    
-        <button 
-            class="btn-continuar" 
-            [disabled]="pantalla() === 'butacas' && butacasSeleccionadas().length === 0" 
-            (click)="navegarBtnContinuar()"
-        >
+
+        } @else {
+
+        <strong class="precio-total">${{ precioTotal() }}</strong>
+
+        }
+
+        <button class="btn-continuar" [disabled]="pantalla() === 'butacas' && butacasSeleccionadas().length === 0"
+            (click)="navegarBtnContinuar()">
             @if(pantalla() === 'pago'){
-                PAGAR
+            PAGAR
             } @else {
-                CONTINUAR
+            CONTINUAR
             }
         </button>
     </div>
 </section>
-
-
-<!-- </section> -->

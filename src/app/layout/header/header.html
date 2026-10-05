@@ -2,18 +2,20 @@
     <div class="logo">
         <h1>LA12·CINEMA</h1>
     </div>
-    <div>
+
+    <div class="header-actions">
+        <button class="perfil-btn" (click)="irAlPerfil()">
+            MI PERFIL
+        </button>
+
         @if (authService.currentUser()) {
-            <button (click)="logout()">
+            <button class="logout-btn" (click)="logout()">
                 CERRAR SESIÓN
             </button>
+        } @else {
+            <button class="login-btn" routerLink="/login" routerLinkActive="active">
+                INICIAR SESIÓN
+            </button>
         }
-
-        <button 
-            class="login-btn"
-            routerLink="/login"
-            routerLinkActive="active"
-            >Iniciar Sesion
-        </button>
     </div>
 </header>

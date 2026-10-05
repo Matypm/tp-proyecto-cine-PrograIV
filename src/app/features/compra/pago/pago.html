@@ -2,83 +2,76 @@
 
     <section class="informacion-pago">
 
-        <h2>INFORMACIÓN DE PAGO</h2>
+        <div class="pago-header">
+            <h2 class="titulo-pago">INFORMACIÓN DE PAGO</h2>
+            <button class="cancelar-btn" (click)="cancelarCompra()">
+                ✕ CANCELAR COMPRA
+            </button>
+        </div>
+
+        <h3 class="subtitulo">DATOS DEL CLIENTE</h3>
 
         @if (currentUser()) {
             <div class="datos-cliente">
 
                 <div class="campo">
                     <label>Nombre</label>
-                    <input
-                        type="text"
-                        [value]="currentPerfil()?.nombre"
-                        readonly>
+                    <input type="text" [value]="currentPerfil()?.nombre" readonly>
                 </div>
 
                 <div class="campo">
                     <label>Apellido</label>
-                    <input
-                        type="text"
-                        [value]="currentPerfil()?.apellido"
-                        readonly>
+                    <input type="text" [value]="currentPerfil()?.apellido" readonly>
                 </div>
 
                 <div class="campo campo-email">
                     <label>Email</label>
-                    <input
-                        type="email"
-                        [value]="currentUser()?.email"
-                        readonly>
+                    <input type="email" [value]="currentUser()?.email" readonly>
                 </div>
 
             </div>
-         } @else {   <!-- si no hay sesion iniciada hacemos q el cliente minimo ingrese estos 3 datos -->
+        } @else {
             <form [formGroup]="formCliente">
                 <div class="datos-cliente">
-        
+
                     <div class="campo">
                         <label>Nombre</label>
-                        <input 
-                            type="text"
-                            formControlName="nombre"
-                            placeholder="Ingresá tu nombre">
+                        <input type="text" formControlName="nombre" placeholder="Ingresá tu nombre">
                     </div>
-        
+
                     <div class="campo">
                         <label>Apellido</label>
-                        <input 
-                            type="text"
-                            formControlName="apellido"
-                            placeholder="Ingresá tu apellido">
+                        <input type="text" formControlName="apellido" placeholder="Ingresá tu apellido">
                     </div>
-        
+
                     <div class="campo campo-email">
                         <label>Email</label>
-                        <input 
-                            type="email"
-                            formControlName="email"
-                            placeholder="Ingresá tu email">
+                        <input type="email" formControlName="email" placeholder="Ingresá tu email">
                     </div>
-        
+
                 </div>
             </form>
         }
 
         <div class="cupon">
 
-            <h3>CUPÓN</h3>
+            <h3 class="subtitulo">CUPÓN</h3>
 
             <div class="cupon-form">
-
                 <input
                     type="text"
-                    placeholder="Ingresá tu cupón">
+                    placeholder="Ingresá tu cupón"
+                    [value]="codigoCupon()"
+                    (input)="codigoCupon.set($any($event.target).value)">
 
-                <button type="button">
+                <button class="aplicar-btn" type="button" (click)="aplicarCupon()">
                     APLICAR
                 </button>
-
             </div>
+
+            @if (mensajeCupon()) {
+                <p class="msj-cupon">{{ mensajeCupon() }}</p>
+            }
 
         </div>
 
@@ -87,8 +80,9 @@
     <app-resumen-compra
         [funcion]="funcion()"
         [pelicula]="pelicula()"
-        pantalla="pago"
-    >
+        [datosCliente]="datosCliente()"
+        (confirmarCompra)="procesarCompra()"
+        pantalla="pago">
     </app-resumen-compra>
 
 </div>

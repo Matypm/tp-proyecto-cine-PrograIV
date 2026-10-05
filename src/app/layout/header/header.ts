@@ -17,4 +17,8 @@ export class Header {
     await this.authService.signOut();
     this.router.navigate(['/home']);
   }
+
+  irAlPerfil() {
+    this.router.navigate(['/perfil']);
+  }
 }

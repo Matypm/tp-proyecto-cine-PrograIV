@@ -1,79 +1,196 @@
 .compra-container {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 40px;
+    justify-content: flex-start;
+    align-items: stretch;   /* antes: flex-start. Hace que el resumen se estire */
+    gap: 0;
     width: 100%;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* parte del Mapa */
+/* MAPA */
+
 .mapa-container {
+    --butaca: clamp(10px, 1.3vw, 15px);
+    --gap: clamp(2px, 0.25vw, 3px);
+    --pasillo: clamp(5px, 0.7vw, 10px);
+
     flex: 1;
+    padding: 30px 40px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.mapa-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.text-selecciona {
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    margin: 0;
+}
+
+
+.mapa-scroll {
+    overflow-x: visible;
+    padding-bottom: 10px;
+}
+
+.mapa-interno {
+    width: 100%;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 6px;
+    align-items: center;
 }
 
-.text-selecciona{
+/* Pantalla */
+
+.pantalla {
+    align-self: stretch;
+    text-align: center;
     font-family: Arial, Helvetica, sans-serif;
-    margin-bottom: 15px;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: #a8a8a8;
+    padding-top: 10px;
+    margin-bottom: 24px;
+    border-top: 4px solid #c9a54b;
+    border-radius: 50% 50% 0 0 / 12px 12px 0 0;
+    background: linear-gradient(180deg, rgba(201, 165, 75, 0.15), transparent);
 }
+
+/* Filas */
 
 .mapa-fila {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: calc(var(--gap) * 2);
 }
-
 
 .nombre-fila {
     font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
     width: 20px;
     font-weight: bold;
     text-align: center;
-}
-
-.butaca {
-    width: 20px;
-    height: 20px;
-    padding: 0;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    color: #a8a8a8;
 }
 
 .butacas-fila {
     display: flex;
-    gap: 5px;
+    gap: var(--gap);
 }
 
+/* Butacas */
 
-/* parte de Pasillos */
-
-.pasillo-izquierdo {
-    margin-right: 15px;
+.butaca {
+    width: var(--butaca);
+    height: var(--butaca);
+    padding: 0;
+    border: none;
+    border-radius: 5px 5px 3px 3px;
+    background-color: #3a3a3a;
+    color: #cfcfcf;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: calc(var(--butaca) * 0.4);
+    cursor: pointer;
+    transition: 0.15s ease;
 }
 
+.butaca:hover:not(:disabled) {
+    background-color: #5a5a5a;
+    transform: scale(1.15);
+}
+
+/* Pasillos */
+
+.pasillo-izquierdo,
 .pasillo-derecho {
-    margin-right: 15px;
+    margin-right: var(--pasillo);
 }
 
-/* tipos de butacad */
+/* Tipos de butaca */
 
 .butaca.accesible {
-    background-color: rgb(0, 56, 209);
+    background-color: #3b6ea5;
+    color: white;
 }
 
 .butaca.vip {
-    background-color: rgb(231, 197, 0);
+    background-color: #c9a54b;
+    color: #12100d;
 }
 
 .butaca.seleccionada {
-    background-color: rgb(165, 0, 0);
+    background-color: #46a758;
+    color: white;
 }
 
 .butaca.ocupada {
-    background-color: red;
+    background-color: #1f1f1f;
+    color: #555;
     cursor: not-allowed;
 }
 
+/* Leyenda */
+
+.leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 22px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #a8a8a8;
+}
+
+.leyenda-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.muestra {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 4px 4px 2px 2px;
+    background-color: #3a3a3a;
+}
+
+.muestra.vip { background-color: #c9a54b; }
+.muestra.accesible { background-color: #3b6ea5; }
+.muestra.seleccionada { background-color: #46a758; }
+.muestra.ocupada { background-color: #1f1f1f; border: 1px solid #444; }
+
+/* Responsive (al final) */
+
+@media (max-width: 900px) {
+    .compra-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 30px;
+        padding: 20px 16px;
+    }
+}
+
+@media (max-width: 600px) {
+    .butaca {
+        font-size: 0; /* a ese tamaño los números no se leen */
+        border-radius: 3px 3px 2px 2px;
+    }
+
+    .nombre-fila {
+        width: 14px;
+        font-size: 10px;
+    }
+}

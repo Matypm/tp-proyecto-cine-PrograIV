@@ -1,41 +1,207 @@
-/* =================== */
-/* parte de resumen */
+:host {
+    display: block;
+    align-self: stretch; /* el panel se estira a toda la altura de la fila */
+}
 
-.resumen-container {
+.resumen-compra {
     width: 400px;
+    min-height: 100%;
+    box-sizing: border-box;
     background-color: #151515;
-    /* border-radius: 0px; */
-    margin: 50px 50px 0px 0px;
-    /* box-sizing: border-box; */
-    font-family: Arial, Helvetica, sans-serif;
+    border: none;
+    border-left: 1px solid rgb(73, 73, 73);
+    border-radius: 0;
+    padding: 32px 30px;
+    display: flex;
+    flex-direction: column;
 }
 
-.resumen-container h3 {
-    font-size: 22px;
+.resumen-compra h3 {
+    margin: 0 0 24px;
+    font-size: 20px;
+    letter-spacing: 2px;
+    text-align: left;
+    padding-bottom: 18px;
+    border-bottom: 2px solid rgb(73, 73, 73);
 }
+
+/* Secciones */
 
 .resumen-pelicula,
 .resumen-funcion,
-.resumen-butacas {
+.resumen-butacas,
+.resumen-candy {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 8px;
+    padding: 20px 0;
+    border-bottom: 1px solid rgb(60, 60, 60);
 }
 
 .titulo-seccion {
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
     color: #838383;
-    margin-bottom: 20px;
+    margin-bottom: 4px;
 }
 
-.precio-total {
-    font-size: 25px
+.resumen-pelicula strong,
+.resumen-funcion strong {
+    font-size: 18px;
 }
 
 .resumen-pelicula span:last-child,
 .resumen-funcion span:last-child {
-    font-size: 15px;
+    font-size: 14px;
     color: #ccc;
-    margin-top: 45px;
+}
+
+/* Butacas */
+
+.butacas-seleccionadas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.butaca-chip {
+    background: #232323;
+    color: white;
+    border: none;
+    border-left: 3px solid #c9a54b;
+    border-radius: 0;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* Candybar */
+
+.producto-seleccionado {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    font-size: 14px;
+}
+
+.producto-thumb {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 0;
+    background: #1a1a1a;
+    display: block;
+}
+
+.producto-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.producto-nombre {
+    font-weight: normal;
+    line-height: 1.25;
+}
+
+.cantidad-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cantidad-control button {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    background: #232323;
+    color: white;
+    border: none;
+    border-radius: 0;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.cantidad-control button:hover {
+    background: #333;
+}
+
+.producto-precio {
+    min-width: 55px;
+    text-align: right;
+    color: #ccc;
+}
+
+/* Footer: totales y botón (queda siempre abajo del panel) */
+
+.compra-footer {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 24px;
+}
+
+.fila-precio {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #a8a8a8;
+}
+
+.fila-precio.descuento {
+    color: #6fd185;
+}
+
+.separador {
+    height: 1px;
+    background: rgb(73, 73, 73);
+    margin: 4px 0;
+}
+
+.fila-precio strong {
+    color: white;
+}
+
+.precio-total {
+    font-size: 26px;
+    color: white;
+}
+
+.btn-continuar {
+    margin-top: 12px;
+    padding: 18px;
+    background: #0164ce;
+    color: white;
+    border: none;
+    border-radius: 0;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+.btn-continuar:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Responsive (al final) */
+
+@media (max-width: 900px) {
+    .compra-container {
+        flex-direction: column;
+        gap: 0;
+        padding: 0;
+    }
+
+    .mapa-container {
+        padding: 20px 16px;
+    }
 }

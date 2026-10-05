@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { ButacaInterface } from '../../../core/models/sala.cine.interface';
 import { CompraService } from '../../../core/services/compra-service';
 import { PeliculasInterface } from '../../../core/models/pelicula.interface';
@@ -6,6 +6,7 @@ import { FuncionInterface } from '../../../core/models/funcion.interface';
 import { Router } from '@angular/router';
 import { ButacasService } from '../../../core/services/butacas-service';
 import { ProductosInterface } from '../../../core/models/candy_bar.interface';
+import { DatosClienteAnonimoInteface } from '../../../core/models/datos-cliente-anonimo.interface';
 
 @Component({
   imports: [],
@@ -22,7 +23,13 @@ export class ResumenCompra {
   pelicula = input<PeliculasInterface | null>(null);
   funcion = input<FuncionInterface | null>(null);
   pantalla = input<'butacas' | 'candybar' | 'pago'>('butacas');
+  datosCliente = input<DatosClienteAnonimoInteface | null>(null);
   prodsSeleccionados = this.compraService.prodsSeleccionados;
+  
+  confirmarCompra = output<void>();
+
+  porcentajeDescuento = this.compraService.porcentajeDescuento;
+  cuponAplicado = this.compraService.cuponAplicado;
 
   butacasSeleccionadas = computed(() => {
     const ids = this.compraService.butacasSeleccionadas();
@@ -61,7 +68,7 @@ export class ResumenCompra {
       this.compraService.sacarProducto(producto);
   }
 
-  precioTotal(): number{
+  precioSubtotal(): number{
     const totalButacas = this.butacasSeleccionadas().reduce((total, butaca) => {
       return total + this.precioDeButaca(butaca);
     }, 0)
@@ -73,7 +80,16 @@ export class ResumenCompra {
     return totalButacas + totalCandy;
   }
 
+  precioDescuento(): number{
+    return this.precioSubtotal() * this.porcentajeDescuento() / 100;
+  }
+
+  precioTotal(): number{
+    return this.precioSubtotal() - this.precioDescuento();
+  }
+
   navegarBtnContinuar(){
+    console.log('aprete btn continuar/pagar')
     const funcionId = this.compraService.funcionSeleccionada();
 
     if(!funcionId){
@@ -87,6 +103,12 @@ export class ResumenCompra {
 
     if(this.pantalla() === 'candybar'){
       this.router.navigate(['/pago', funcionId]);
+      return;
+    }
+
+    if(this.pantalla() === 'pago'){
+      console.log('estoy en pantalla pago')
+      this.confirmarCompra.emit();
       return;
     }
 

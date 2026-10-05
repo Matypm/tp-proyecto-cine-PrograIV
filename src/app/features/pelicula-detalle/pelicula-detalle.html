@@ -3,65 +3,81 @@
 
         <div class="name-img-container">
             <h2>{{ pelicula()?.nombre }}</h2>
-
             <img [src]="pelicula()?.imagen" [alt]="pelicula()?.nombre">
         </div>
 
         <div class="generos">
             @for (genero of pelicula()?.pelicula_genero; track genero.genero_id) {
-            <h3>{{ genero.generos.nombre }}</h3>
+            <span class="genero-chip">{{ genero.generos.nombre }}</span>
             }
         </div>
-        <p>
-            {{ pelicula()?.sinopsis }}
-        </p>
-        <p>
-            Duración:
-            {{ pelicula() ? formatearDuracion(pelicula()!.duracion) : '' }}
-        </p>
+
+        <p class="sinopsis">{{ pelicula()?.sinopsis }}</p>
+
+        <div class="info-fila">
+            <span class="info-label">Formatos</span>
+            <span class="info-valor">{{ formatosDisponibles().join(' · ') }}</span>
+        </div>
+
+        <div class="info-fila">
+            <span class="info-label">Duración</span>
+            <span class="info-valor">
+                {{ pelicula() ? formatearDuracion(pelicula()!.duracion) : '' }}
+            </span>
+        </div>
 
     </section>
 
     <!-- HORARIOS -->
     <section class="horarios">
 
+        @if (pelicula()?.edad_restriccion === 13 || pelicula()?.edad_restriccion === 18) {
+        <div class="aviso-edad" [class.aviso-18]="pelicula()?.edad_restriccion === 18">
+            <span class="aviso-edad-icono">+{{ pelicula()?.edad_restriccion }}</span>
+            <span class="aviso-edad-texto">
+                Apta para mayores de {{ pelicula()?.edad_restriccion }} años
+            </span>
+        </div>
+        }
+
+        @if (mensajeEdad()) {
+        <div class="mensaje-error" role="alert">
+            <span class="mensaje-error-icono">!</span>
+            <span class="mensaje-error-texto">{{ mensajeEdad() }}</span>
+        </div>
+        }
+
         <h2>FUNCIONES</h2>
 
         <!-- DÍAS -->
         <div class="dias">
             @for (dia of diasDisponibles(); track dia.fecha) {
-                <button 
-                    class="dia"
-                    (click)="diaSeleccionado.set(dia.fecha); funcionSeleccionada.set(null)">
-                    <span>{{ dia.dia }}</span>
-                    <span>{{ dia.fecha }}</span>
-                    
-                </button>
+            <button class="dia" [class.activo]="diaSeleccionado() === dia.fecha"
+                (click)="diaSeleccionado.set(dia.fecha); funcionSeleccionada.set(null)">
+                <span>{{ dia.dia }}</span>
+                <span>{{ dia.fecha }}</span>
+            </button>
             }
         </div>
-
 
         <!-- FUNCIONES -->
         <div class="funciones">
             @for (funcion of funcionesDelDia(); track funcion.id) {
-                <button 
-                    class="horario"
-                    (click)="funcionSeleccionada.set(funcion.id!)">
-                    {{ formatearFormaDeHora(funcion.fecha_hora) }}
+            <button class="horario" [class.activo]="funcionSeleccionada() === funcion.id"
+                (click)="funcionSeleccionada.set(funcion.id!)">
+                {{ formatearFormaDeHora(funcion.fecha_hora) }}
 
-                    <small class="formato-idioma">
-                        {{ funcion.formato }} · {{ funcion.idioma }}
-                    </small>
-                </button>
-            }
-
-        </div>
-        @if (funcionSeleccionada()) {
-            <button
-                class="comprar-btn"
-                (click)="comprarEntrada(funcionSeleccionada()!)">
-                COMPRAR ENTRADA
+                <small class="formato-idioma">
+                    {{ funcion.formato }} · {{ funcion.idioma }}
+                </small>
             </button>
+            }
+        </div>
+
+        @if (funcionSeleccionada()) {
+        <button class="comprar-btn" (click)="comprarEntrada(funcionSeleccionada()!)">
+            COMPRAR ENTRADA
+        </button>
         }
 
     </section>

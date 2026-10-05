@@ -1,6 +1,5 @@
 import { Component, computed, inject, signal, effect } from '@angular/core';
-import { CategoriaCandyInterface, ProductoCompraInterface, ProductosInterface } from '../../../core/models/candy_bar.interface';
-import { SupabaseService } from '../../../core/services/supabase-service';
+import { ProductosInterface } from '../../../core/models/candy_bar.interface';
 import { CandybarService } from '../../../core/services/candybar-service';
 import { CompraService } from '../../../core/services/compra-service';
 import { ResumenCompra } from '../resumen-compra/resumen-compra';
@@ -9,7 +8,6 @@ import { PeliculaService } from '../../../core/services/pelicula-service';
 import { PeliculasInterface } from '../../../core/models/pelicula.interface';
 import { FuncionInterface } from '../../../core/models/funcion.interface';
 import { ActivatedRoute, Router } from '@angular/router';
-import { errorContext } from 'rxjs/internal/util/errorContext';
 import { ButacasService } from '../../../core/services/butacas-service';
 
 @Component({
@@ -20,8 +18,8 @@ import { ButacasService } from '../../../core/services/butacas-service';
 })
 export class Candybar {
 
-  private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private compraService = inject(CompraService);
   private candybarService = inject(CandybarService);
   private funcionService = inject(FuncionesService);
@@ -103,6 +101,10 @@ export class Candybar {
     this.compraService.agregarProducto(producto);
   }
 
+  sacarProducto(producto: ProductosInterface) {
+    this.compraService.sacarProducto(producto);
+  }
+
 
   precioTotalCandy = computed(() => {
     const productos = this.prodsSeleccionados();
@@ -121,4 +123,8 @@ export class Candybar {
     return total;
   })
 
+  cancelarCompra() {
+    this.compraService.limpiarCompra();
+    this.router.navigate(['/home']);
+  }
 }

@@ -1,45 +1,97 @@
-.detalle-container{
+.detalle-container {
     display: flex;
     gap: 180px;
+    padding-bottom: 100px; /* espacio para el botón fijo */
 }
 
-.info-pelicula{
+/* INFO DE LA PELÍCULA */
+
+.info-pelicula {
     max-width: 290px;
     margin: 2% 0 0 10%;
 }
 
+.name-img-container {
+    width: 100%;
+}
+
+.name-img-container h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+.name-img-container img {
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+/* Géneros (chips) */
+
+.generos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 18px 0 16px;
+}
+
+.genero-chip {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #c9c9c9;
+    background: #1a1712;
+    border: 1px solid rgb(73, 73, 73);
+    border-radius: 4px;
+    padding: 5px 10px;
+}
+
+.sinopsis {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #c9c9c9;
+    margin: 0 0 22px;
+}
+
+/* Filas: formatos y duración */
+
+.info-fila {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0;
+    border-top: 1px solid rgb(73, 73, 73);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
+.info-fila:last-child {
+    border-bottom: 1px solid rgb(73, 73, 73);
+}
+
+.info-label {
+    color: #a8a8a8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.info-valor {
+    color: white;
+    font-weight: bold;
+    text-align: right;
+}
+
+/* HORARIOS */
 
 .horarios {
     flex: 1;
     margin-top: 8%;
+    margin-right: 10%;
 }
-
-.name-img-container{
-    width: 100%;
-}
-.name-img-container img{
-    width: 100%;
-    height: 450px;
-    border-radius: 15px;
-}
-
-.name-img-container h2{
-    font-family: Arial, Helvetica, sans-serif;
-    color: white;
-}
-
-.generos h3{
-    font-family: Arial, Helvetica, sans-serif;
-    color: white;
-    font-weight: bold;
-}
-
-.info-pelicula p{
-    font-family: Arial, Helvetica, sans-serif;
-    color: white;
-    font-weight: bold;
-}
-
 
 .horarios h2 {
     font-family: Arial, Helvetica, sans-serif;
@@ -47,11 +99,11 @@
     margin-bottom: 25px;
 }
 
-
 /* DÍAS */
 
 .dias {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 30px;
 }
@@ -69,12 +121,12 @@
     flex-direction: column;
     align-items: center;
     gap: 3px;
+    transition: 0.2s;
 }
 
 .dia:hover {
     background-color: #333;
 }
-
 
 /* FUNCIONES */
 
@@ -89,8 +141,6 @@
     padding: 12px 18px;
     border: none;
     background-color: #232323;
-    /* border: 2px solid white; */
-    /* border-radius: 10px; */
     color: white;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 15px;
@@ -112,29 +162,165 @@
     font-weight: normal;
 }
 
-/* Media queries Responsive */
+/* Seleccionados (después de los hover) */
+
+.dia.activo,
+.horario.activo {
+    background-color: #f5c400;
+    color: #12100d;
+}
+
+/* BOTÓN DE COMPRA (fijo, abajo a la derecha) */
+
+.comprar-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 100;
+    padding: 16px 40px;
+    background: #3b6ea5;
+    color: white;
+    border: none;
+    border-radius: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+.aviso-edad {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0;
+    padding: 12px 14px;
+    background: #1a1712;
+    border: 1px solid rgb(73, 73, 73);
+    border-left: 3px solid #c9a54b;
+    border-radius: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.aviso-edad-icono {
+    flex-shrink: 0;
+    min-width: 40px;
+    padding: 6px 8px;
+    background: #c9a54b;
+    color: #12100d;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.aviso-edad-texto {
+    color: #c9c9c9;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* +18: más serio, en rojo apagado */
+
+.aviso-edad.aviso-18 {
+    border-left-color: #b8383c;
+}
+
+.aviso-edad.aviso-18 .aviso-edad-icono {
+    background: #b8383c;
+    color: white;
+}
+
+.mensaje-error {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0;
+    padding: 12px 14px;
+    background: rgba(184, 56, 60, 0.12);
+    border: 1px solid rgba(184, 56, 60, 0.4);
+    border-left: 3px solid #b8383c;
+    border-radius: 0;
+}
+
+.mensaje-error-icono {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #b8383c;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.mensaje-error-texto {
+    color: #ff9a9d;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* Media queries Responsive (siempre al final) */
 
 @media (max-width: 900px) {
-
     .detalle-container {
         gap: 60px;
     }
-
 }
 
 @media (max-width: 600px) {
-
     .detalle-container {
         flex-direction: column;
         gap: 30px;
     }
 
     .info-pelicula {
-        margin-left: auto;
-        margin-right: auto;
+        width: 100%;
+        max-width: 340px;
+        margin: 20px auto 0;
+        padding: 0 20px;
+        box-sizing: border-box;
     }
 
+    .name-img-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .name-img-container h2 {
+        text-align: center;
+        margin: 0 0 16px;
+    }
+
+    .name-img-container img {
+        width: 100%;
+        max-width: 260px;
+        height: auto;
+        aspect-ratio: 2 / 3;
+    }
+
+    .generos {
+        justify-content: center;
+    }
+
+    .sinopsis {
+        text-align: center;
+    }
+
+    .horarios {
+        margin: 0 20px 30px;
+    }
+
+    .dia {
+        padding: 12px 20px;
+    }
+
+    .comprar-btn {
+        left: 20px;
+        right: 20px;
+        bottom: 20px;
+    }
 }
-
-
-

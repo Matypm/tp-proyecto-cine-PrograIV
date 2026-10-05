@@ -1,0 +1,99 @@
+<div class="mis-compras">
+
+    <h2 class="mis-compras-titulo">MIS COMPRAS</h2>
+
+    <div class="compras-columnas">
+
+        <!-- VISTAS (izquierda) -->
+        <section class="compras-seccion">
+            <h3 class="seccion-titulo">VISTAS</h3>
+
+            <div class="compras-lista">
+                @for (compra of compras(); track compra.id) {
+                    @if (esCompraVista(compra)) {
+                        @if (compra.entradas[0]; as primera) {
+                            <article class="entrada">
+
+                                <img class="entrada-poster" [src]="primera.funciones.peliculas.imagen"
+                                    [alt]="primera.funciones.peliculas.nombre">
+
+                                <div class="entrada-info">
+                                    <h4 class="entrada-pelicula">{{ primera.funciones.peliculas.nombre }}</h4>
+
+                                    <span class="entrada-dato">
+                                        {{ formatearFechaYHora(primera.funciones.fecha_hora).fecha }}
+                                        · {{ formatearFechaYHora(primera.funciones.fecha_hora).hora }} hs
+                                    </span>
+
+                                    <span class="entrada-dato">
+                                        {{ primera.funciones.formato }} · {{ primera.funciones.idioma }}
+                                    </span>
+
+                                    <div class="entrada-footer">
+                                        <div class="entrada-butacas">
+                                            @for (entrada of compra.entradas; track entrada.id) {
+                                            <span class="entrada-butaca">
+                                                {{ entrada.butacas.fila }}{{ entrada.butacas.columna }}
+                                            </span>
+                                            }
+                                        </div>
+                                        <span class="entrada-precio">${{ totalCompra(compra) }}</span>
+                                    </div>
+                                </div>
+
+                            </article>
+                        }
+                    }
+                }
+            </div>
+        </section>
+
+        <!-- PRÓXIMAS (derecha) -->
+        <section class="compras-seccion">
+            <h3 class="seccion-titulo">PRÓXIMAS</h3>
+
+            <div class="compras-lista">
+                @for (compra of compras(); track compra.id) {
+                @if (esCompraProxima(compra)) {
+                @if (compra.entradas[0]; as primera) {
+                <article class="entrada">
+
+                    <img class="entrada-poster" [src]="primera.funciones.peliculas.imagen"
+                        [alt]="primera.funciones.peliculas.nombre">
+
+                    <div class="entrada-info">
+                        <h4 class="entrada-pelicula">{{ primera.funciones.peliculas.nombre }}</h4>
+
+                        <span class="entrada-dato">
+                            {{ formatearFechaYHora(primera.funciones.fecha_hora).fecha }}
+                            · {{ formatearFechaYHora(primera.funciones.fecha_hora).hora }} hs
+                        </span>
+
+                        <span class="entrada-dato">
+                            {{ primera.funciones.formato }} · {{ primera.funciones.idioma }}
+                        </span>
+
+                        <div class="entrada-footer">
+                            <div class="entrada-butacas">
+                                @for (entrada of compra.entradas; track entrada.id) {
+                                <span class="entrada-butaca">
+                                    {{ entrada.butacas.fila }}{{ entrada.butacas.columna }}
+                                </span>
+                                }
+                            </div>
+                            <span class="entrada-precio">${{ totalCompra(compra) }}</span>
+                            <button class="btn-cancelar" (click)="cancelarCompra(compra)">
+                                Cancelar compra
+                            </button>
+                        </div>
+                    </div>
+
+                </article>
+                }
+                }
+                }
+            </div>
+        </section>
+
+    </div>
+</div>

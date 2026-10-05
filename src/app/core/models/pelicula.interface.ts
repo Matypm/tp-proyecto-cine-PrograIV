@@ -4,4 +4,5 @@ export interface PeliculasInterface {
     imagen: string;
     sinopsis: string;
     duracion: number // en minutos
+    edad_restriccion: number;
 }

@@ -1,42 +1,52 @@
-<div class="categorias">
-    @for (categoria of categorias(); track categoria.id) {
-    <button 
-        (click)="seleccionarCategoria(categoria.id!)" 
-        [class.seleccionada]="categoriaSeleccionada() === categoria.id">
-        {{ categoria.nombre }}
-    </button>
-    }
-</div>
+<div class="compra-container">
 
-<section class="productos">
-    <h2>PRODUCTOS</h2>
+    <section class="candy-container">
 
-    <div class="productos-grid">
-        @for (producto of productosFiltrados(); track producto.id) {
-        <div class="producto-card">
-
-            <div class="producto-imagen">
-                <img 
-                    [src]="producto.imagen" 
-                    [alt]="producto.nombre">
-            </div>
-
-            <h3 class="nombre-prod">{{ producto.nombre }}</h3>
-
-            <span class="precio-prod">${{ producto.precio }}</span>
-
-            <button 
-                class="btn-add"
-                (click)="agregarProducto(producto)">
-                +
+        <div class="candy-header">
+            <h2 class="titulo-productos">PRODUCTOS</h2>
+            <button class="cancelar-btn" (click)="cancelarCompra()">
+                ✕ CANCELAR COMPRA
             </button>
         </div>
-        }
-    </div>
-</section>
-<app-resumen-compra
-    [pelicula]="pelicula()"
-    [funcion]="funcion()"
-    pantalla="candybar"
->
-</app-resumen-compra>
+
+        <div class="categorias">
+            @for (categoria of categorias(); track categoria.id) {
+                <button
+                    class="categoria-btn"
+                    (click)="seleccionarCategoria(categoria.id!)"
+                    [class.seleccionada]="categoriaSeleccionada() === categoria.id">
+                    {{ categoria.nombre }}
+                </button>
+            }
+        </div>
+
+        <div class="productos-grid">
+            @for (producto of productosFiltrados(); track producto.id) {
+                <div class="producto-card">
+
+                    <div class="producto-imagen">
+                        <img [src]="producto.imagen" [alt]="producto.nombre">
+                    </div>
+
+                    <div class="producto-body">
+                        <h3 class="nombre-prod">{{ producto.nombre }}</h3>
+
+                        <div class="producto-footer">
+                            <span class="precio-prod">${{ producto.precio }}</span>
+                            <button class="btn-add" (click)="agregarProducto(producto)">+</button>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        </div>
+
+    </section>
+
+    <app-resumen-compra
+        [pelicula]="pelicula()"
+        [funcion]="funcion()"
+        pantalla="candybar">
+    </app-resumen-compra>
+
+</div>

@@ -5,6 +5,7 @@ import { Register } from './features/auth/register/register';
 import { authGuard } from './core/guards/auth.guard';
 import { AdminGuard } from './core/guards/admin-guard';
 import { MapaButacas } from './features/compra/mapa-butacas/mapa-butacas';
+import { InformacionEntrada } from './features/compra/informacion-entrada/informacion-entrada';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -36,5 +37,12 @@ export const routes: Routes = [
     {
         path: 'pago/:funcionId',
         loadComponent: () => import('./features/compra/pago/pago').then(c => c.Pago)
+    },
+    {
+        path: 'confirmacion/:compraId',
+        loadComponent: () => import('./features/compra/informacion-entrada/informacion-entrada').then(c => InformacionEntrada)
+    },
+    {path: 'perfil',
+        loadComponent: () => import('./features/perfil/perfil-component/perfil-component').then(c => c.PerfilComponent)
     }
 ];

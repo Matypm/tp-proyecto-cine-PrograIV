@@ -15,6 +15,14 @@ export interface ProductosInterface {
 
 // representa ese producto dentro de una compra concreta.
 export interface ProductoCompraInterface {
-    producto: ProductosInterface;
     cantidad: number;
+    producto: ProductosInterface;
+}
+
+// Registro de compras_productos ya guardado
+export interface CompraProductoInterface {
+    producto_id: string;
+    cantidad: number;
+    precio_unidad: number;
+    productos_candy: ProductosInterface;
 }

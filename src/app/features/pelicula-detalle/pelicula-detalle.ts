@@ -3,6 +3,7 @@ import { PeliculaService } from '../../core/services/pelicula-service';
 import { Router } from '@angular/router';
 import { FuncionesService } from '../../core/services/funciones-service';
 import { CompraService } from '../../core/services/compra-service';
+import { AuthService } from '../../core/services/auth-service';
 
 @Component({
   imports: [],
@@ -18,9 +19,14 @@ export class PeliculaDetalle {
   private funcionesService = inject(FuncionesService);
   private compraService = inject(CompraService);
   private router = inject(Router);
+  private authService = inject(AuthService);
+
+  currentUser = this.authService.currentUser;
+  currentPerfil = this.authService.currentPerfil;
 
   diaSeleccionado = signal('');
   funcionSeleccionada = signal<string | null>(null);
+  mensajeEdad = signal('');
 
   // computed() obtiene la película correspondiente al ID de la ruta.
   // Si las películas del servicio cambian, este computed se actualiza.
@@ -43,6 +49,11 @@ export class PeliculaDetalle {
       return this.formatearFormaDeFecha(funcion.fecha_hora).fecha === dia; //
     })
   })
+
+  formatosDisponibles = computed(() => {
+    const formatos = this.funciones().map(funcion => funcion.formato.toUpperCase());
+    return [...new Set(formatos)]; // Set elimina los repetidos
+  });
 
   constructor() {
     effect(() => {
@@ -127,10 +138,67 @@ export class PeliculaDetalle {
     return fechasUnicas; // Este es el resultado que quiero que tenga diasDisponibles
   });
 
-  comprarEntrada(funcionId: string): void{
+  comprarEntrada(funcionId: string): void {
+
+    if (!this.puedeComprar()) {
+      this.mensajeEdad.set(
+        `No cumplís con la edad mínima de ${this.pelicula()?.edad_restriccion} años para esta película.`
+      );
+      return;
+    }
+
+    this.mensajeEdad.set('');
+
     this.compraService.funcionSeleccionada.set(funcionId);
     this.router.navigate(['/compra', funcionId]);
   }
+
+  puedeComprar(): boolean {
+    const pelicula =  this.pelicula();
+
+    if(!pelicula){
+      return false;
+    }
+
+    // Sin restriccion
+    if(pelicula.edad_restriccion === 0){
+      return true;
+    }
+
+    // User anonimo
+    if(!this.currentUser()){
+      return true;
+    }
+
+    // Usuario registrado
+    const perfil = this.currentPerfil();
+
+    if(!perfil?.fecha_nacimiento){
+      return false;
+    }
+
+    const edad = this.calcularEdad(perfil.fecha_nacimiento);
+
+    return edad >= pelicula.edad_restriccion;
+  }
+
+  calcularEdad(fechaNacimiento: string): number {
+    const nacimiento = new Date(fechaNacimiento);
+    const hoy = new Date();
+
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+
+    const mes = hoy.getMonth() - nacimiento.getMonth();
+
+    if (
+      mes < 0 ||
+      (mes === 0 && hoy.getDate() < nacimiento.getDate())
+    ) {
+      edad--;
+    }
+
+    return edad;
+  } 
 
 
 

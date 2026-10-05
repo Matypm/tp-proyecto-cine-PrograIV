@@ -1,3 +1,5 @@
+import { PeliculasInterface } from "./pelicula.interface";
+
 export type FormatoPelicula = '2d' | '3d' | '4d' | '5d';
 export type IdiomaPelicula = 'castellano' | 'subtitulada'
 
@@ -8,6 +10,7 @@ export interface FuncionInterface {
     fecha_hora: string;
     formato: FormatoPelicula;
     idioma: IdiomaPelicula;
+    peliculas: PeliculasInterface;
 
     salas?: {
     id: string;

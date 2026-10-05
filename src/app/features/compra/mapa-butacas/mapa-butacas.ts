@@ -70,19 +70,20 @@ export class MapaButacas {
       .sort((a, b) => a.columna - b.columna);
   }
 
-  esButacaDiscapacidad(fila: string, columna: number): boolean {
-    if (fila !== 'J' && fila !== 'K') {
-        return false;
-    }
+  esButacaDiscapacidad(fila: string): boolean {
+    return fila === 'J' || fila === 'K';
+    // if (fila !== 'J' && fila !== 'K') {
+    //     return false;
+    // }
     
-    return (
-        columna === 3 ||
-        columna === 4 ||
-        (columna >= 5 && columna <= 9) ||
-        (columna >= 20 && columna <= 24) ||
-        columna === 25 ||
-        columna === 26
-    );
+    // return (
+    //     columna === 3 ||
+    //     columna === 4 ||
+    //     (columna >= 5 && columna <= 9) ||
+    //     (columna >= 20 && columna <= 24) ||
+    //     columna === 25 ||
+    //     columna === 26
+    // );
 }
 
   esVip(fila:string): boolean{
@@ -146,14 +147,8 @@ export class MapaButacas {
 
       const pelicula = this.peliculaService.getPeliculaById(funcion.pelicula_id);
       this.pelicula.set(pelicula()!);
-
-      console.log('Funcion: ', funcion);
-      console.log('Sala: ', funcion.sala_id)
   
       await this.butacasService.obtenerButacasSala(funcion.sala_id);
-      console.log('Butacas en el service:', this.butacasService.butacas());
-      console.log('Primera butaca:', this.butacasService.butacas()[0]);
-console.log('Cantidad fila A:', this.butacasPorFila('A').length);
 
       await this.butacasService.obtenerButacasOcupadas(funcion.id!)
   
@@ -166,7 +161,11 @@ console.log('Cantidad fila A:', this.butacasPorFila('A').length);
       this.butacasService.butacas()
       );
     })
-    
+  }
+
+  cancelarCompra() {
+    this.compraService.limpiarCompra();
+    this.router.navigate(['/home']);
   }
 }
 

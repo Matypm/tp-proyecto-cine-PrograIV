@@ -20,9 +20,13 @@ export class AuthService {
     }
 
     private initAuthSession(){
-        this.supabase.auth.getSession().then(({data:{session}}) => {
+        this.supabase.auth.getSession().then(async ({data:{session}}) => {
             this.currentSession.set(session);
             this.currentUser.set(session?.user ?? null); // si hay sesión, guardá el usuario de esa sesión; si no hay sesión, guardá null
+
+            if (session?.user) {
+                await this.cargarPerfil(session.user.id);
+        }
         });
 
         this.supabase.auth.onAuthStateChange((_event, session) => {

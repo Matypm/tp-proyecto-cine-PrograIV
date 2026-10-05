@@ -1,40 +1,62 @@
 <div class="compra-container">
 
     <section class="mapa-container">
-    
-        <h2 class="text-selecciona">SELECCIONA TU BUTACA</h2>
-        @for (fila of filas; track fila) {
-            <div class="mapa-fila">
-                <span class="nombre-fila">{{ fila }}</span>
-                
-                <div class="butacas-fila">
-                    @for (butaca of butacasPorFila(fila); track butaca.id) {
-                        <button 
-                            class="butaca"
-                            [class.pasillo-izquierdo]="butaca.columna === 4"
-                            [class.pasillo-derecho]="butaca.columna === 24"
-                            [class.accesible]="esButacaDiscapacidad(fila, butaca.columna)"
-                            [class.vip]="esVip(fila)"
-                            [class.seleccionada]="butacasSeleccionadas().includes(butaca.id!)"
-                            [class.ocupada]="butacaOcupada(butaca.id!)"
-                            [disabled]="butacaOcupada(butaca.id!)"
-                            (click)="seleccionarButaca(butaca.id!)"
-                        >
-                            {{ butaca.columna }}
-                        </button>
-                    }
-                </div>
-            
+
+        <div class="mapa-header">
+            <h2 class="text-selecciona">SELECCIONA TU BUTACA</h2>
+            <button class="cancelar-btn" (click)="cancelarCompra()">
+                ✕ CANCELAR COMPRA
+            </button>
+        </div>
+
+        <div class="mapa-scroll">
+            <div class="mapa-interno">
+
+                <div class="pantalla">PANTALLA</div>
+
+                @for (fila of filas; track fila) {
+                    <div class="mapa-fila">
+                        <span class="nombre-fila">{{ fila }}</span>
+
+                        <div class="butacas-fila">
+                            @for (butaca of butacasPorFila(fila); track butaca.id) {
+                                <button
+                                    class="butaca"
+                                    [class.pasillo-izquierdo]="butaca.columna === 4"
+                                    [class.pasillo-derecho]="butaca.columna === 24"
+                                    [class.accesible]="esButacaDiscapacidad(butaca.fila)"
+                                    [class.vip]="esVip(fila)"
+                                    [class.seleccionada]="butacasSeleccionadas().includes(butaca.id!)"
+                                    [class.ocupada]="butacaOcupada(butaca.id!)"
+                                    [disabled]="butacaOcupada(butaca.id!)"
+                                    (click)="seleccionarButaca(butaca.id!)">
+                                    {{ butaca.columna }}
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+
             </div>
-        }
+        </div>
+
+        <!-- Leyenda -->
+        <div class="leyenda">
+            <span class="leyenda-item"><i class="muestra"></i> Disponible</span>
+            <span class="leyenda-item"><i class="muestra vip"></i> VIP</span>
+            <span class="leyenda-item"><i class="muestra accesible"></i> Accesible</span>
+            <span class="leyenda-item"><i class="muestra seleccionada"></i> Seleccionada</span>
+            <span class="leyenda-item"><i class="muestra ocupada"></i> Ocupada</span>
+        </div>
+
     </section>
+
     <app-resumen-compra
         [pelicula]="pelicula()"
         [funcion]="funcion()"
-        pantalla="butacas"
-       >
+        pantalla="butacas">
     </app-resumen-compra>
-    
+
 </div>
 
 

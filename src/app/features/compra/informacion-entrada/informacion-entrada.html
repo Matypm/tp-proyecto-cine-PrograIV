@@ -1,0 +1,89 @@
+@if (compraObtenida(); as compra) {
+<div class="gracias-container">
+
+    <h2 class="gracias-titulo">¡GRACIAS POR TU COMPRA!</h2>
+    <p class="gracias-sub">Presentá este código en la entrada</p>
+
+    <!-- para q muestre un solo qr si es q se compran mas de una butaca
+     si no va a mostrar 3 qrs -->
+    @if (compra.entradas[0]; as primera) {
+    <article class="ticket">
+
+        <div class="ticket-main">
+            <img class="ticket-poster" [src]="primera.funciones.peliculas.imagen"
+                [alt]="primera.funciones.peliculas.nombre">
+
+            <div class="ticket-info">
+                <span class="ticket-label">TU ENTRADA</span>
+                <h3 class="ticket-pelicula">{{ primera.funciones.peliculas.nombre }}</h3>
+
+                <div class="ticket-fila">
+                    <span class="ticket-label">Función</span>
+                    <span class="ticket-valor">
+                        {{ formatearFechaYHora(primera.funciones.fecha_hora).fecha }}
+                        · {{ formatearFechaYHora(primera.funciones.fecha_hora).hora }} hs
+                    </span>
+                </div>
+
+                <div class="ticket-fila">
+                    <span class="ticket-label">Formato</span>
+                    <span class="ticket-valor">
+                        {{ primera.funciones.formato }} · {{ primera.funciones.idioma }}
+                    </span>
+                </div>
+
+                <div class="ticket-fila">
+                    <span class="ticket-label">Butacas</span>
+                    <div class="ticket-butacas">
+                        @for (entrada of compra.entradas; track entrada.id) {
+                        <span class="butaca-chip">
+                            {{ entrada.butacas.fila }}{{ entrada.butacas.columna }}
+                        </span>
+                        }
+                    </div>
+                </div>
+
+                <div class="ticket-fila">
+                    <span class="ticket-label">Cliente</span>
+                    <span class="ticket-valor">{{ compra.nombre }} {{ compra.apellido }}</span>
+                </div>
+
+                <div class="ticket-fila">
+                    <span class="ticket-label">Email</span>
+                    <span class="ticket-valor">{{ compra.email }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ticket-qr">
+            <div class="qr-box">
+                <qrcode [qrdata]="compra.codigo_qr ?? ''" [width]="180" [errorCorrectionLevel]="'M'">
+                </qrcode>
+            </div>
+            <span class="qr-texto">ESCANEÁ AL INGRESAR</span>
+            <button class="descargar-btn" type="button" (click)="descargarPDF()">
+                ↓ DESCARGAR PDF
+            </button>
+        </div>
+
+    </article>
+    }
+
+    @if (compra.compras_productos?.length) {
+    <section class="candy-resumen">
+        <h3 class="candy-titulo">CANDYBAR</h3>
+        @for (producto of compra.compras_productos; track producto.producto_id) {
+        <div class="candy-fila">
+            <span>{{ producto.cantidad }} × {{ producto.productos_candy.nombre}}</span>
+            <span>${{ producto.precio_unidad * producto.cantidad }}</span>
+        </div>
+        }
+    </section>
+    }
+
+    <button class="volver-btn" (click)="volverAlInicio()">
+        ✕ VOLVER A INICIO
+    </button>
+
+</div>
+}
