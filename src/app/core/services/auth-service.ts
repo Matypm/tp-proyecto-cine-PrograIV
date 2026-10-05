@@ -12,50 +12,59 @@ export class AuthService {
 
     currentUser = signal<User | null>(null);
     currentSession = signal<Session | null>(null);
-    currentPerfil = signal <UsuarioInterface | null>(null);
+    currentPerfil = signal<UsuarioInterface | null>(null);
+    perfilCargado = signal(false);
 
-    constructor(){
-        
+    constructor() {
+
         this.initAuthSession() // aca se "prenderia" la sesión
     }
 
-    private initAuthSession(){
-        this.supabase.auth.getSession().then(async ({data:{session}}) => {
+    private initAuthSession() {
+        this.supabase.auth.getSession().then(async ({ data: { session } }) => {
             this.currentSession.set(session);
             this.currentUser.set(session?.user ?? null); // si hay sesión, guardá el usuario de esa sesión; si no hay sesión, guardá null
 
             if (session?.user) {
                 await this.cargarPerfil(session.user.id);
-        }
+            }
         });
 
         this.supabase.auth.onAuthStateChange((_event, session) => {
             this.currentSession.set(session);
             this.currentUser.set(session?.user ?? null);
+
+            if (session?.user) {
+                this.cargarPerfil(session.user.id);
+            } else {
+                this.currentPerfil.set(null);
+            }
         });
     }
 
-    async cargarPerfil(id: string){ // cargarPerfil me sirve para poder leer los datos de la tabla usuarios
-        const {data, error} = await this.supabase
-        .from('usuarios')
-        .select('*')
-        .eq('id', id)
-        .single();
+    async cargarPerfil(id: string) { // cargarPerfil me sirve para poder leer los datos de la tabla usuarios
+        const { data, error } = await this.supabase
+            .from('usuarios')
+            .select('*')
+            .eq('id', id)
+            .single();
 
-        if(error){
+        if (error) {
             console.error('Error al cargar tu perfil', error)
             return;
         }
-        else{
+        else {
             this.currentPerfil.set(data)
             console.log('Perfil obtenido exitosamente!')
         }
+        this.perfilCargado.set(true);
     }
 
-    async signUp(email: string, password: string, nombre: string, apellido: string, fecha_nacimiento: string){
-        return this.supabase.auth.signUp({email, password,
-            options:{
-                data:{
+    async signUp(email: string, password: string, nombre: string, apellido: string, fecha_nacimiento: string) {
+        return this.supabase.auth.signUp({
+            email, password,
+            options: {
+                data: {
                     nombre: nombre,
                     apellido: apellido,
                     fecha_nacimiento: fecha_nacimiento
@@ -64,17 +73,17 @@ export class AuthService {
         });
     }
 
-    async signIn(email: string, password: string){
-        const resultado = await this.supabase.auth.signInWithPassword({email, password})
+    async signIn(email: string, password: string) {
+        const resultado = await this.supabase.auth.signInWithPassword({ email, password })
 
-        if(resultado.data.user){
+        if (resultado.data.user) {
             await this.cargarPerfil(resultado.data.user.id)
         }
 
         return resultado;
     }
 
-    async signOut(){
+    async signOut() {
         return this.supabase.auth.signOut();
     }
 }   

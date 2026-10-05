@@ -1,11 +1,6 @@
 import { Routes } from '@angular/router';
-import { Home } from './features/home/home';
-import { Login } from './features/auth/login/login';
-import { Register } from './features/auth/register/register';
-import { authGuard } from './core/guards/auth.guard';
-import { AdminGuard } from './core/guards/admin-guard';
-import { MapaButacas } from './features/compra/mapa-butacas/mapa-butacas';
 import { InformacionEntrada } from './features/compra/informacion-entrada/informacion-entrada';
+import { AdminGuard } from './core/guards/admin-guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -44,5 +39,15 @@ export const routes: Routes = [
     },
     {path: 'perfil',
         loadComponent: () => import('./features/perfil/perfil-component/perfil-component').then(c => c.PerfilComponent)
+    },
+    {
+    path: 'admin/peliculas',
+    canActivate: [AdminGuard],
+    loadComponent: () => import('./features/admin/peliculas/gestion-peliculas/gestion-peliculas').then(c => c.GestionPeliculas)
+    },
+    {
+    path: 'admin/peliculas/crear',
+    canActivate: [AdminGuard],
+    loadComponent: () => import('./features/admin/peliculas/crear-pelicula/crear-pelicula').then(c => c.CrearPelicula)
     }
 ];

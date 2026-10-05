@@ -129,4 +129,20 @@ export class PeliculaService {
         return computed(() => this.peliculasSignal().find(pelicula => pelicula.id === id))
     }
 
+    async crearPelicula(pelicula: PeliculasInterface) {
+        const { data, error } = await this.supabase
+            .from('peliculas')
+            .insert(pelicula)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error al crear la película:', error);
+            return null;
+        }
+
+        console.log('Película creada:', data);
+
+        return data;
+    }
 }

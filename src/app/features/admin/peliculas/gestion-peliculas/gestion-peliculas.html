@@ -1,0 +1,43 @@
+<section class="gestion-peliculas">
+
+    <div class="encabezado">
+        <div class="encabezado-texto">
+            <h1 class="gestion-titulo">GESTIÓN DE PELÍCULAS</h1>
+            <p class="gestion-sub">Administrá las películas de LA12 Cinema.</p>
+        </div>
+
+        <button class="nueva-btn" type="button" routerLink="/admin/peliculas/crear">
+            + NUEVA PELÍCULA
+        </button>
+    </div>
+
+    <div class="lista-peliculas">
+        @for (pelicula of peliculas(); track pelicula.id) {
+        <div class="pelicula">
+
+            <img class="pelicula-poster" [src]="pelicula.imagen" [alt]="pelicula.nombre">
+
+            <div class="informacion">
+                <h2 class="pelicula-nombre">{{ pelicula.nombre }}</h2>
+
+                <div class="pelicula-datos">
+                    <span class="dato-chip">{{ pelicula.duracion }} min</span>
+                    <span class="dato-chip">+{{ pelicula.edad_restriccion }}</span>
+                </div>
+            </div>
+
+            <div class="acciones">
+                <button class="editar-btn" type="button">EDITAR</button>
+                <button class="eliminar-btn" type="button">ELIMINAR</button>
+            </div>
+
+        </div>
+        } @empty {
+        <p class="lista-vacia">Todavía no hay películas cargadas.</p>
+        }
+    </div>
+    <button routerLink="/home">
+        IR AL HOME
+    </button>
+
+</section>

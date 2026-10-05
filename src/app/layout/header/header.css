@@ -21,6 +21,8 @@
     gap: 12px;
 }
 
+.btn-inicio,
+.admin-btn,
 .perfil-btn,
 .login-btn,
 .logout-btn {
@@ -32,6 +34,31 @@
     white-space: nowrap;
     cursor: pointer;
     transition: 0.2s ease;
+}
+
+.btn-inicio {
+    display: inline-flex;
+    align-items: center;
+    background: transparent;
+    color: #c9a54b;
+    border: 1px solid #c9a54b;
+    text-decoration: none;
+}
+
+.btn-inicio:hover {
+    background: #c9a54b;
+    color: #12100d;
+}
+
+.admin-btn {
+    background: transparent;
+    color: #6f9fd1;
+    border: 1px solid #3b6ea5;
+}
+
+.admin-btn:hover {
+    background: #3b6ea5;
+    color: white;
 }
 
 .perfil-btn {
@@ -74,6 +101,8 @@
         padding: 0 16px;
     }
 
+    .btn-inicio,
+    .admin-btn,
     .perfil-btn,
     .login-btn,
     .logout-btn {
@@ -93,6 +122,8 @@
         font-size: 16px;
     }
 
+    .btn-inicio,
+    .admin-btn,
     .perfil-btn,
     .login-btn,
     .logout-btn {

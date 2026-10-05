@@ -1,12 +1,11 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { PeliculaService } from '../../core/services/pelicula-service';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet, RouterLink } from '@angular/router';
 import { PeliculaCard } from '../../shared/component/pelicula-card/pelicula-card';
 import { SearhBar } from '../../shared/component/searh-bar/searh-bar';
 
-
 @Component({
-  imports: [PeliculaCard, SearhBar, RouterOutlet],
+  imports: [PeliculaCard, SearhBar, RouterOutlet, RouterLink],
   selector: 'app-home',
   styleUrl: './home.css',
   templateUrl: './home.html',

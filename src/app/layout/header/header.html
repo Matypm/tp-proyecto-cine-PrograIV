@@ -2,18 +2,35 @@
     <div class="logo">
         <h1>LA12·CINEMA</h1>
     </div>
-
     <div class="header-actions">
-        <button class="perfil-btn" (click)="irAlPerfil()">
+        @if (router.url === '/perfil' || router.url.startsWith('/admin')) {
+            <a routerLink="/home" class="btn-inicio">
+                INICIO
+            </a>
+        }
+        @if (authService.currentPerfil()?.rol === 'admin' && !router.url.startsWith('/admin')) {
+            <button
+                class="admin-btn"
+                routerLink="/admin/peliculas">
+                ADMIN
+            </button>
+        }
+        <button
+            class="perfil-btn"
+            (click)="irAlPerfil()">
             MI PERFIL
         </button>
-
         @if (authService.currentUser()) {
-            <button class="logout-btn" (click)="logout()">
+            <button
+                class="logout-btn"
+                (click)="logout()">
                 CERRAR SESIÓN
             </button>
         } @else {
-            <button class="login-btn" routerLink="/login" routerLinkActive="active">
+            <button
+                class="login-btn"
+                routerLink="/login"
+                routerLinkActive="active">
                 INICIAR SESIÓN
             </button>
         }

@@ -11,7 +11,7 @@ import { AuthService } from '../../core/services/auth-service';
 export class Header {
 
   authService = inject(AuthService);
-  private router = inject(Router);
+  router = inject(Router);
 
   async logout(){
     await this.authService.signOut();
