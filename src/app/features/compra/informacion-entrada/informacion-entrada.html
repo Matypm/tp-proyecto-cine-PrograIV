@@ -1,8 +1,25 @@
 @if (compraObtenida(); as compra) {
 <div class="gracias-container">
 
-    <h2 class="gracias-titulo">¡GRACIAS POR TU COMPRA!</h2>
-    <p class="gracias-sub">Presentá este código en la entrada</p>
+    @if (esEntradaProxima()) {
+        <h2 class="gracias-titulo">TU ENTRADA</h2>
+        <p class="gracias-sub">
+            Presentá este código al ingresar
+        </p>
+    } @else {
+        <h2 class="gracias-titulo">ENTRADA UTILIZADA</h2>
+        <p class="gracias-sub">
+            Esta función ya finalizó
+        </p>
+    }
+
+    <span class="qr-texto">
+        @if (esEntradaProxima()) {
+            PRESENTÁ ESTE CÓDIGO AL INGRESAR
+        } @else {
+            ENTRADA FINALIZADA
+        }
+    </span>
 
     <!-- para q muestre un solo qr si es q se compran mas de una butaca
      si no va a mostrar 3 qrs -->

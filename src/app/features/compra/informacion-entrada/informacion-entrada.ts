@@ -28,29 +28,31 @@ export class InformacionEntrada {
     this.cargarCompra();
   }
 
-  async cargarCompra(){
+  async cargarCompra() {
     this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe(async params => {
-      const compraId = params.get('compraId');
+      .subscribe(async params => {
+        const compraId = params.get('compraId');
 
-      if(!compraId){
-        console.error('No se selecciono una compra');
-        return;
-      }
+        if (!compraId) {
+          console.error('No se selecciono una compra');
+          return;
+        }
 
-      const compra = await this.compraService.traerInfoCompra(compraId);
+        const compra = await this.compraService.traerInfoCompra(compraId);
 
-      if (!compra) {
-        return;
-      }
+        if (!compra) {
+          return;
+        }
 
-      console.log('Compra obtenida: ', compra);
-      this.compraObtenida.set(compra);
-      console.log(this.compraObtenida())
-    });
+        await this.compraService.probarProductosCompra(compraId);
+
+        console.log('Compra obtenida: ', compra);
+        this.compraObtenida.set(compra);
+        console.log(this.compraObtenida())
+      });
   }
 
-  formatearFechaYHora(fechaHora: string): {fecha: string, hora: string}{
+  formatearFechaYHora(fechaHora: string): { fecha: string, hora: string } {
     const fecha = new Date(fechaHora); // convierte la hora q le pasa fechaHora en un objeto de tipo Date 
 
     // toLocaleTimeString() significa, básicamente:
@@ -72,156 +74,174 @@ export class InformacionEntrada {
     };
   }
 
-async descargarPDF() {
-  const compra = this.compraObtenida();
+  async descargarPDF() {
+    const compra = this.compraObtenida();
 
-  if (!compra || compra.entradas.length === 0) {
-    return;
-  }
+    if (!compra || compra.entradas.length === 0) {
+      return;
+    }
 
-  const pdf = new jsPDF();
+    const pdf = new jsPDF();
 
-  const entrada = compra.entradas[0];
-  const pelicula = entrada.funciones.peliculas;
-  const fechaHora = this.formatearFechaYHora(
-    entrada.funciones.fecha_hora
-  );
+    const entrada = compra.entradas[0];
+    const pelicula = entrada.funciones.peliculas;
+    const fechaHora = this.formatearFechaYHora(
+      entrada.funciones.fecha_hora
+    );
 
-  let y = 20;
+    let y = 20;
 
-  // Título
-  pdf.setFontSize(22);
-  pdf.text('LA12 CINEMA', 20, y);
+    // Título
+    pdf.setFontSize(22);
+    pdf.text('LA12 CINEMA', 20, y);
 
-  y += 10;
-
-  pdf.setFontSize(14);
-  pdf.text('Comprobante de entrada', 20, y);
-
-  // QR
-  const qr = await QRCode.toDataURL(compra.codigo_qr);
-
-  pdf.addImage(qr, 'PNG', 140, 15, 50, 50);
-
-  // Película
-  y += 20;
-
-  pdf.setFontSize(16);
-  pdf.text('Película', 20, y);
-
-  y += 8;
-
-  pdf.setFontSize(12);
-  pdf.text(pelicula.nombre, 20, y);
-
-  // Fecha y horario
-  y += 12;
-
-  pdf.text(`Fecha: ${fechaHora.fecha}`, 20, y);
-
-  y += 7;
-
-  pdf.text(`Horario: ${fechaHora.hora} hs`, 20, y);
-
-  // Formato e idioma
-  y += 7;
-
-  pdf.text(
-    `Formato: ${entrada.funciones.formato}`,
-    20,
-    y
-  );
-
-  y += 7;
-
-  pdf.text(
-    `Idioma: ${entrada.funciones.idioma}`,
-    20,
-    y
-  );
-
-  // Butacas
-  y += 12;
-
-  pdf.setFontSize(14);
-  pdf.text('Butacas', 20, y);
-
-  y += 8;
-
-  pdf.setFontSize(12);
-
-  const butacas = compra.entradas
-    .map(entrada =>
-      `${entrada.butacas.fila}${entrada.butacas.columna}`
-    )
-    .join(' · ');
-
-  pdf.text(butacas, 20, y);
-
-  // Datos del comprador
-  y += 15;
-
-  pdf.setFontSize(14);
-  pdf.text('Datos del comprador', 20, y);
-
-  y += 8;
-
-  pdf.setFontSize(12);
-
-  pdf.text(`Nombre: ${compra.nombre}`, 20, y);
-
-  y += 7;
-
-  pdf.text(`Apellido: ${compra.apellido}`, 20, y);
-
-  y += 7;
-
-  pdf.text(`Email: ${compra.email}`, 20, y);
-
-  // Candybar
-  if (compra.compras_productos.length > 0) {
-
-    y += 15;
+    y += 10;
 
     pdf.setFontSize(14);
-    pdf.text('Candybar', 20, y);
+    pdf.text('Comprobante de entrada', 20, y);
+
+    // QR
+    const qr = await QRCode.toDataURL(compra.codigo_qr);
+
+    pdf.addImage(qr, 'PNG', 140, 15, 50, 50);
+
+    // Película
+    y += 20;
+
+    pdf.setFontSize(16);
+    pdf.text('Película', 20, y);
+
+    y += 8;
+
+    pdf.setFontSize(12);
+    pdf.text(pelicula.nombre, 20, y);
+
+    // Fecha y horario
+    y += 12;
+
+    pdf.text(`Fecha: ${fechaHora.fecha}`, 20, y);
+
+    y += 7;
+
+    pdf.text(`Horario: ${fechaHora.hora} hs`, 20, y);
+
+    // Formato e idioma
+    y += 7;
+
+    pdf.text(
+      `Formato: ${entrada.funciones.formato}`,
+      20,
+      y
+    );
+
+    y += 7;
+
+    pdf.text(
+      `Idioma: ${entrada.funciones.idioma}`,
+      20,
+      y
+    );
+
+    // Butacas
+    y += 12;
+
+    pdf.setFontSize(14);
+    pdf.text('Butacas', 20, y);
 
     y += 8;
 
     pdf.setFontSize(12);
 
-    for (const producto of compra.compras_productos) {
+    const butacas = compra.entradas
+      .map(entrada =>
+        `${entrada.butacas.fila}${entrada.butacas.columna}`
+      )
+      .join(' · ');
 
-      const total =
-        producto.precio_unidad * producto.cantidad;
+    pdf.text(butacas, 20, y);
 
-      pdf.text(
-        `${producto.cantidad} x ${producto.productos_candy.nombre} - $${total}`,
-        20,
-        y
-      );
+    // Datos del comprador
+    y += 15;
 
-      y += 7;
+    pdf.setFontSize(14);
+    pdf.text('Datos del comprador', 20, y);
+
+    y += 8;
+
+    pdf.setFontSize(12);
+
+    pdf.text(`Nombre: ${compra.nombre}`, 20, y);
+
+    y += 7;
+
+    pdf.text(`Apellido: ${compra.apellido}`, 20, y);
+
+    y += 7;
+
+    pdf.text(`Email: ${compra.email}`, 20, y);
+
+    // Candybar
+    if (compra.compras_productos.length > 0) {
+
+      y += 15;
+
+      pdf.setFontSize(14);
+      pdf.text('Candybar', 20, y);
+
+      y += 8;
+
+      pdf.setFontSize(12);
+
+      for (const producto of compra.compras_productos) {
+
+        const total =
+          producto.precio_unidad * producto.cantidad;
+
+        pdf.text(
+          `${producto.cantidad} x ${producto.productos_candy.nombre} - $${total}`,
+          20,
+          y
+        );
+
+        y += 7;
+      }
     }
+
+    // Código de entrada
+    y += 12;
+
+    pdf.setFontSize(10);
+
+    pdf.text(
+      `Código de entrada: ${compra.codigo_qr}`,
+      20,
+      y
+    );
+
+    // Descargar
+    pdf.save(`entrada-${compra.id}.pdf`);
   }
 
-  // Código de entrada
-  y += 12;
+  esEntradaProxima(): boolean {
+    const compra = this.compraObtenida();
 
-  pdf.setFontSize(10);
+    if (!compra || compra.entradas.length === 0) {
+      return false;
+    }
 
-  pdf.text(
-    `Código de entrada: ${compra.codigo_qr}`,
-    20,
-    y
-  );
+    const fechaFuncion = new Date(
+      compra.entradas[0].funciones.fecha_hora
+    );
 
-  // Descargar
-  pdf.save(`entrada-${compra.id}.pdf`);
-}
+    return fechaFuncion > new Date();
+  }
+
+  esEntradaVista(): boolean {
+    return !this.esEntradaProxima();
+  }
 
 
-  volverAlInicio(){
+  volverAlInicio() {
     this.compraService.limpiarCompra();
     this.router.navigate(['/home'])
   }

@@ -154,11 +154,11 @@ export class CompraService {
     console.log('Butacas recuperadas:', butacasParseadas);
   }
 
-  async validarCupon(codigo: string, usuarioId: string){
+  async validarCupon(codigo: string, usuarioId: string) {
 
     const codigoNormalizado = codigo.trim().toUpperCase();
 
-    const {data, error} = await this.supabase
+    const { data, error } = await this.supabase
       .from('cupones')
       .select('*')
       .eq('codigo', codigoNormalizado)
@@ -166,28 +166,28 @@ export class CompraService {
       .eq('usado', false)
       .single();
 
-      if(error){
-        console.error('Error al obtener el cupon', error);
-        return null;
-      }
+    if (error) {
+      console.error('Error al obtener el cupon', error);
+      return null;
+    }
 
-      this.cuponAplicado.set(data.id);
-      this.porcentajeDescuento.set(data.porcentaje_descuento)
+    this.cuponAplicado.set(data.id);
+    this.porcentajeDescuento.set(data.porcentaje_descuento)
 
-      return data;
+    return data;
   }
 
   async crearCompra(
-      nombre: string, apellido: string, email: string, usuarioId: string | null
-    ){
-      // genero to desde aca el id de la compra 
-      // para insertarlo directamente a la tabla y no tener
-      // q estar comparandolo con el q genera supabase
-      // esto me generaba un tema con la politica al comprar
-      // con un usuario anonimo ya que no dispone de usuario_id
-      const compraId = crypto.randomUUID();
+    nombre: string, apellido: string, email: string, usuarioId: string | null
+  ) {
+    // genero to desde aca el id de la compra 
+    // para insertarlo directamente a la tabla y no tener
+    // q estar comparandolo con el q genera supabase
+    // esto me generaba un tema con la politica al comprar
+    // con un usuario anonimo ya que no dispone de usuario_id
+    const compraId = crypto.randomUUID();
 
-      const { error } = await this.supabase
+    const { error } = await this.supabase
       .from('compras')
       .insert({
         id: compraId,
@@ -199,18 +199,18 @@ export class CompraService {
         retirado: false
       });
 
-      if(error){
-        console.error('Error al registrar la compra: ', error);
-        return null;
-      }
+    if (error) {
+      console.error('Error al registrar la compra: ', error);
+      return null;
+    }
 
-      return {
-        id: compraId,
-        usuario_id: usuarioId
-      };
+    return {
+      id: compraId,
+      usuario_id: usuarioId
+    };
   }
 
-  async crearEntradas(compraId: string, funcionId: string, butacasIds: string[], usuarioId: string | null){
+  async crearEntradas(compraId: string, funcionId: string, butacasIds: string[], usuarioId: string | null) {
     const entradas = butacasIds.map(butacaId => {
 
       const butaca = this.butacasServices.butacas().find(
@@ -245,14 +245,14 @@ export class CompraService {
     return true;
   }
 
-  async crearComprasProductos(compraId: string){
+  async crearComprasProductos(compraId: string) {
     // prodsSeleccionados tiene los productos seleccionados y su cantidad
     // (Pochoclo -> cantidad 1)
     const productos = this.prodsSeleccionados();
 
-     if(productos.length === 0){
-        return [];
-     }
+    if (productos.length === 0) {
+      return [];
+    }
 
     // con map transformamos cada producto en los datos
     // que necesitamos guardar en compras_productos
@@ -264,46 +264,46 @@ export class CompraService {
     }));
 
     // aca se insertan esos valores de productosCompra
-     const { error } = await this.supabase
-     .from('compras_productos')
-     .insert(productosCompra)
+    const { error } = await this.supabase
+      .from('compras_productos')
+      .insert(productosCompra)
 
-     if(error){
+    if (error) {
       console.error('Error al cargar los productos de la compra: ', error);
       return null;
     }
     return true;
   }
 
-  async confirmarCompra(nombre: string, 
-    apellido: string, 
-    email: string, 
-    usuarioId: string | null, 
+  async confirmarCompra(nombre: string,
+    apellido: string,
+    email: string,
+    usuarioId: string | null,
     funcionId: string,
-    butacasIds: string[]){
+    butacasIds: string[]) {
 
     const compra = await this.crearCompra(nombre, apellido, email, usuarioId);
 
-    if(!compra){
+    if (!compra) {
       return;
     }
     const entradas = await this.crearEntradas(compra.id, funcionId, butacasIds, compra.usuario_id)
 
-    if(!entradas){
-      return; 
+    if (!entradas) {
+      return;
     }
 
     const butacasCompradas = await this.butacasServices.ocuparButacas(
       funcionId, butacasIds
     );
 
-    if(!butacasCompradas){
+    if (!butacasCompradas) {
       return null;
     }
 
     const productos = await this.crearComprasProductos(compra.id);
 
-    if(productos === null){
+    if (productos === null) {
       return null;
     }
 
@@ -328,82 +328,98 @@ export class CompraService {
 
       return data;
   }
+///////////////////////////////////////////////
+  async probarProductosCompra(compraId: string) {
 
-  async obtenerComprasUsuario(usuarioId: string) {
   const { data, error } = await this.supabase
-    .from('compras')
-    .select(`*, 
-      entradas (*,butacas (*), funciones (*, peliculas (*))), compras_productos (*,productos_candy (*))`)
-    .eq('usuario_id', usuarioId);
+    .from('compras_productos')
+    .select(`
+      *,
+      productos_candy (*)
+    `)
+    .eq('compra_id', compraId);
 
-  if (error) {
-    console.error('Error al obtener las compras del usuario:', error);
-    return [];
-  }
+  console.log('PRODUCTOS DIRECTOS:', data);
+  console.log('ERROR PRODUCTOS DIRECTOS:', error);
 
   return data;
 }
+///////////////////////////////////////////
+  async obtenerComprasUsuario(usuarioId: string) {
+    const { data, error } = await this.supabase
+      .from('compras')
+      .select(`*, 
+      entradas (*,butacas (*), funciones (*, peliculas (*))), compras_productos (*,productos_candy (*))`)
+      .eq('usuario_id', usuarioId);
 
-async cancelarCompra(compraId: string, usuarioId: string) {
+    if (error) {
+      console.error('Error al obtener las compras del usuario:', error);
+      return [];
+    }
 
-  const compra = await this.traerInfoCompra(compraId);
-
-  if (!compra) {
-    return false;
+    return data;
   }
 
-  if (compra.cancelada) {
-    return false;
-  }
+  async cancelarCompra(compraId: string, usuarioId: string) {
 
-  const fechaFuncion = new Date(
-    compra.entradas[0].funciones.fecha_hora
-  );
+    const compra = await this.traerInfoCompra(compraId);
 
-  const ahora = new Date();
+    if (!compra) {
+      return false;
+    }
 
-  const diferencia = fechaFuncion.getTime() - ahora.getTime();
+    if (compra.cancelada) {
+      return false;
+    }
 
-  const dosHoras = 2 * 60 * 60 * 1000;
+    const fechaFuncion = new Date(
+      compra.entradas[0].funciones.fecha_hora
+    );
 
-  if (diferencia < dosHoras) {
-    return false;
-  }
+    const ahora = new Date();
 
-  const funcionId = compra.entradas[0].funcion_id;
+    const diferencia = fechaFuncion.getTime() - ahora.getTime();
 
-  const butacasIds = compra.entradas.map(
+    const dosHoras = 2 * 60 * 60 * 1000;
+
+    if (diferencia < dosHoras) {
+      return false;
+    }
+
+    const funcionId = compra.entradas[0].funcion_id;
+
+    const butacasIds = compra.entradas.map(
       (entrada: any) => entrada.butaca_id
-  );
+    );
 
-  const liberadas = await this.butacasServices.liberarButacas(
+    const liberadas = await this.butacasServices.liberarButacas(
       funcionId,
       butacasIds
-  );
+    );
 
-  if (!liberadas) {
+    if (!liberadas) {
       return false;
+    }
+
+    const { data, error } = await this.supabase
+      .from('compras')
+      .update({ cancelada: true })
+      .eq('id', compraId)
+      .eq('usuario_id', usuarioId)
+      .select()
+
+    console.log('Resultado del UPDATE:', data);
+    console.log('Error del UPDATE:', error);
+
+    if (error) {
+      console.error('ERROR AL CANCELAR:', error);
+      return false;
+    }
+
+    return true;
   }
 
-  const { data, error } = await this.supabase
-    .from('compras')
-    .update({ cancelada: true })
-    .eq('id', compraId)
-    .eq('usuario_id', usuarioId)
-    .select()
-
-  console.log('Resultado del UPDATE:', data);
-  console.log('Error del UPDATE:', error);
-
-  if (error) {
-    console.error('ERROR AL CANCELAR:', error);
-    return false;
-}
-
-  return true;
-}
-
-  limpiarCompra(){
+  limpiarCompra() {
     // reseteo los estados de las signals
     this.funcionSeleccionada.set(null);
     this.butacasSeleccionadas.set([]);

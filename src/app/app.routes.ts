@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { InformacionEntrada } from './features/compra/informacion-entrada/informacion-entrada';
 import { AdminGuard } from './core/guards/admin-guard';
+import { EmployeeGuard } from './core/guards/employee-guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -88,5 +89,12 @@ export const routes: Routes = [
         path: 'admin/candybar',
         canActivate: [AdminGuard],
         loadComponent: () => import('./features/admin/candy-bar/gestion-candybar/gestion-candybar').then(c => c.GestionCandybar)
+    },
+
+    // RUTAS EMPLEADO
+    {
+        path: 'empleado',
+        canActivate: [EmployeeGuard],
+        loadComponent: () => import('./features/empleado/validacion/validacion-empleado-component/validacion-empleado-component').then(c => c.ValidacionEmpleadoComponent)
     }
 ];

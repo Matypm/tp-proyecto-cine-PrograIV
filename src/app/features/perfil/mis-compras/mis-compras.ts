@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CompraService } from '../../../core/services/compra-service';
 import { AuthService } from '../../../core/services/auth-service';
+import { Router } from '@angular/router';
 
 @Component({
   imports: [],
@@ -9,8 +10,9 @@ import { AuthService } from '../../../core/services/auth-service';
   templateUrl: './mis-compras.html',
 })
 export class MisCompras {
-   private compraService = inject(CompraService);
+  private compraService = inject(CompraService);
   private authService = inject(AuthService);
+  private router = inject(Router);
 
   compras = signal<any[]>([]);
   comprasProximas = signal<any[]>([]);
@@ -28,7 +30,7 @@ export class MisCompras {
     this.compras.set(compras);
   }
 
-  
+
 
   formatearFechaYHora(fecha: string): { fecha: string, hora: string } {
     const fechaObj = new Date(fecha);
@@ -46,11 +48,11 @@ export class MisCompras {
   esCompraProxima(compra: any): boolean {
 
     if (compra.cancelada) {
-        return false;
+      return false;
     }
 
     const fechaFuncion = new Date(
-        compra.entradas[0].funciones.fecha_hora
+      compra.entradas[0].funciones.fecha_hora
     );
 
     const ahora = new Date();
@@ -63,7 +65,7 @@ export class MisCompras {
     const ahora = new Date();
 
     return fechaFuncion <= ahora;
-  } 
+  }
 
   totalCompra(compra: { entradas: { precio: number }[] }): number {
     return compra.entradas.reduce((total, entrada) => total + entrada.precio, 0);
@@ -76,22 +78,26 @@ export class MisCompras {
     if (!usuario) return;
 
     const cancelada = await this.compraService.cancelarCompra(
-        compra.id,
-        usuario.id
+      compra.id,
+      usuario.id
     );
 
     if (cancelada) {
 
-        alert('Compra cancelada correctamente.');
+      alert('Compra cancelada correctamente.');
 
-        const comprasActualizadas =
-            await this.compraService.obtenerComprasUsuario(usuario.id);
+      const comprasActualizadas =
+        await this.compraService.obtenerComprasUsuario(usuario.id);
 
-        this.compras.set(comprasActualizadas);
+      this.compras.set(comprasActualizadas);
 
     } else {
 
-        alert('No se pudo cancelar la compra.');
+      alert('No se pudo cancelar la compra.');
     }
+  }
+
+  verEntrada(compraId: string) {
+    this.router.navigate(['/confirmacion', compraId]);
   }
 }

@@ -6,5 +6,7 @@ export interface CompraInterface {
   email: string;
   codigo_qr: string;
   retirado: boolean;
+  entrada_validada: boolean;
+  candybar_retirado: boolean;
   created_at?: string;
 }
