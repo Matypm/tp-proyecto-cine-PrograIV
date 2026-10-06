@@ -41,13 +41,33 @@ export const routes: Routes = [
         loadComponent: () => import('./features/perfil/perfil-component/perfil-component').then(c => c.PerfilComponent)
     },
     {
-    path: 'admin/peliculas',
-    canActivate: [AdminGuard],
-    loadComponent: () => import('./features/admin/peliculas/gestion-peliculas/gestion-peliculas').then(c => c.GestionPeliculas)
+        path: 'admin',
+        canActivate: [AdminGuard],
+        loadComponent: () => import('./features/admin/admin-dashboard-component/admin-dashboard-component').then(c => c.AdminDashboardComponent)
     },
     {
-    path: 'admin/peliculas/crear',
-    canActivate: [AdminGuard],
-    loadComponent: () => import('./features/admin/peliculas/crear-pelicula/crear-pelicula').then(c => c.CrearPelicula)
+        path: 'admin/peliculas',
+        canActivate: [AdminGuard],
+        loadComponent: () => import('./features/admin/peliculas/gestion-peliculas/gestion-peliculas').then(c => c.GestionPeliculas)
+    },
+    {
+        path: 'admin/peliculas/crear',
+        canActivate: [AdminGuard],
+        loadComponent: () => import('./features/admin/peliculas/crear-pelicula/crear-pelicula').then(c => c.CrearPelicula)
+    },
+    {
+        path: 'admin/peliculas/editar/:id',
+        canActivate: [AdminGuard],
+        loadComponent: () => import('./features/admin/peliculas/editar-pelicula-component/editar-pelicula-component').then(c => c.EditarPeliculaComponent)
+    },
+    {
+        path: 'admin/salas',
+        canActivate: [AdminGuard],
+        loadComponent: () => import('./features/admin/salas/salas-gestion-component/salas-gestion-component').then(c => c.SalasGestionComponent)
+    },
+    {
+        path: 'admin/salas/distribucion/:id',
+        canActivate: [AdminGuard],
+        loadComponent: () => import('./features/admin/salas/distribucion-sala/distribucion-sala').then(c => c.DistribucionSala)
     }
 ];

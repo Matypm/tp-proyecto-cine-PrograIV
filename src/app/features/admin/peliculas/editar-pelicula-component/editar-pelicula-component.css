@@ -2,7 +2,7 @@
     display: block;
 }
 
-.crear-pelicula {
+.editar-pelicula {
     max-width: 640px;
     margin: 0 auto;
     padding: 30px 40px 60px;
@@ -178,7 +178,7 @@ form {
 /* Responsive (al final) */
 
 @media (max-width: 600px) {
-    .crear-pelicula {
+    .editar-pelicula {
         padding: 20px 16px 40px;
     }
 }

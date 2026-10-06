@@ -37,9 +37,6 @@ export class MapaButacas {
     'P', 'Q', 'R', 'S', 'T'
   ];
 
-  // precioNormal = 10000;
-  // precioVip = 17000;
-
 
   constructor(){
     this.cargarFuncion();
@@ -51,14 +48,6 @@ export class MapaButacas {
     });
     
   }
-
-  // preciodeButaca(butaca: ButacaInterface): number {
-  //   if(this.esVip(butaca.fila)){
-  //     return this.precioVip;
-  //   }
-
-  //   return this.precioNormal;
-  // }
 
 
   butacasPorFila(fila:string){
@@ -72,18 +61,6 @@ export class MapaButacas {
 
   esButacaDiscapacidad(fila: string): boolean {
     return fila === 'J' || fila === 'K';
-    // if (fila !== 'J' && fila !== 'K') {
-    //     return false;
-    // }
-    
-    // return (
-    //     columna === 3 ||
-    //     columna === 4 ||
-    //     (columna >= 5 && columna <= 9) ||
-    //     (columna >= 20 && columna <= 24) ||
-    //     columna === 25 ||
-    //     columna === 26
-    // );
 }
 
   esVip(fila:string): boolean{

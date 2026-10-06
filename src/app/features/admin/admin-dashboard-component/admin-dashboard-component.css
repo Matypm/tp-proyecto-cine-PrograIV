@@ -1,0 +1,158 @@
+:host {
+    display: block;
+}
+
+.admin-dashboard {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px 40px 60px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+/* Encabezado */
+
+.encabezado {
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgb(73, 73, 73);
+}
+
+.encabezado h2 {
+    margin: 0;
+    font-size: 22px;
+    letter-spacing: 1.5px;
+}
+
+.encabezado p {
+    margin: 6px 0 0;
+    font-size: 14px;
+    color: #a8a8a8;
+}
+
+/* Métricas */
+
+.metricas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 16px;
+}
+
+.metrica {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    background: #151515;
+    border: 1px solid rgb(60, 60, 60);
+    border-left: 3px solid #c9a54b;
+}
+
+.metrica-titulo {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #838383;
+}
+
+.metrica strong {
+    font-size: 28px;
+    color: white;
+}
+
+/* Título de sección */
+
+.seccion-titulo {
+    margin: 0;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgb(73, 73, 73);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #838383;
+}
+
+/* Módulos */
+
+.modulos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 16px;
+}
+
+.modulo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: #151515;
+    color: white;
+    border: 1px solid rgb(60, 60, 60);
+    border-left: 3px solid rgb(90, 90, 90);
+    border-radius: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.modulo:hover {
+    background: #1c1c1c;
+    border-left-color: #c9a54b;
+}
+
+.icono {
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #232323;
+    font-size: 22px;
+}
+
+.modulo div {
+    flex: 1;
+    min-width: 0;
+}
+
+.modulo h3 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    letter-spacing: 1px;
+}
+
+.modulo p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #a8a8a8;
+}
+
+.flecha {
+    flex-shrink: 0;
+    font-size: 18px;
+    color: #838383;
+    transition: 0.2s ease;
+}
+
+.modulo:hover .flecha {
+    color: #c9a54b;
+    transform: translateX(4px);
+}
+
+/* Responsive (al final) */
+
+@media (max-width: 600px) {
+    .admin-dashboard {
+        padding: 20px 16px 40px;
+    }
+
+    .metrica strong {
+        font-size: 24px;
+    }
+}

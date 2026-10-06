@@ -1,11 +1,11 @@
-<section class="crear-pelicula">
+<section class="editar-pelicula">
 
     <div class="encabezado">
-        <h1>CREAR PELÍCULA</h1>
-        <p>Agregá una nueva película a LA12·CINEMA.</p>
+        <h1>EDITAR PELÍCULA</h1>
+        <p>Modificá los datos de la película.</p>
     </div>
 
-    <form [formGroup]="formPeliculaNueva" (ngSubmit)="crearPelicula()">
+    <form [formGroup]="formPeliculaEdicion" (ngSubmit)="editarPelicula()">
 
         <div class="campo">
             <label for="nombre">Nombre</label>
@@ -51,11 +51,17 @@
                 <div class="preview">
                     <img [src]="imagenPreview()" alt="Vista previa de la película">
                 </div>
+            } @else if (imagenActual()) {
+                <div class="preview">
+                    <img [src]="imagenActual()!" alt="Imagen actual de la película">
+                </div>
             }
         </div>
 
         <button class="submit-btn" type="submit">
-            CREAR PELÍCULA
+            GUARDAR CAMBIOS
         </button>
+
     </form>
+
 </section>

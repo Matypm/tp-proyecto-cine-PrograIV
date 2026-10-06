@@ -1,0 +1,63 @@
+<div class="distribucion-container">
+    <section class="mapa-container">
+        <div class="mapa-header">
+            <div>
+                <h2 class="distribucion-titulo">DISTRIBUCIÓN DE SALA</h2>
+                <p class="distribucion-sub">
+                    {{ salaService.butacas().length }} butacas
+                </p>
+            </div>
+        </div>
+
+        <div class="mapa-scroll">
+            <div class="mapa-interno">
+                <div class="pantalla">
+                    PANTALLA
+                </div>
+
+                @for (fila of filas; track fila) {
+                    <div class="mapa-fila">
+                        <span class="nombre-fila">
+                            {{ fila }}
+                        </span>
+
+                        <div class="butacas-fila">
+                            @for (butaca of butacasPorFila(fila); track butaca.id
+                            ) {
+                                <button
+                                    type="button"
+                                    class="butaca"
+                                    [class.pasillo-izquierdo]="butaca.columna === 4"
+                                    [class.pasillo-derecho]="butaca.columna === 24"
+                                    [class.accesible]="esButacaDiscapacidad(butaca.fila)"
+                                    [class.vip]="esVip(fila)"
+                                    >
+                                    {{ butaca.columna }}
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- LEYENDA -->
+        <div class="leyenda">
+
+            <span class="leyenda-item">
+                <i class="muestra"></i>
+                Butaca convencional
+            </span>
+
+            <span class="leyenda-item">
+                <i class="muestra vip"></i>
+                VIP
+            </span>
+
+            <span class="leyenda-item">
+                <i class="muestra accesible"></i>
+                Accesible
+            </span>
+        </div>
+    </section>
+</div>

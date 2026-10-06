@@ -24,11 +24,32 @@
                     <span class="dato-chip">{{ pelicula.duracion }} min</span>
                     <span class="dato-chip">+{{ pelicula.edad_restriccion }}</span>
                 </div>
+
+                <div class="pelicula-generos">
+                    @for (relacion of pelicula.pelicula_genero; track relacion.genero_id) {
+                    <span class="genero-chip">
+                        {{ relacion.generos.nombre }}
+                    </span>
+                    }
+                </div>
             </div>
 
+
             <div class="acciones">
-                <button class="editar-btn" type="button">EDITAR</button>
-                <button class="eliminar-btn" type="button">ELIMINAR</button>
+                <button 
+                    class="editar-btn" 
+                    type="button"
+                    (click)="editarPelicula(pelicula.id!)"
+                    >
+                    EDITAR
+                </button>
+                <button 
+                    class="eliminar-btn" 
+                    type="button"
+                    (click)="eliminarPelicula(pelicula.id!)"
+                    >
+                    ELIMINAR
+                </button>
             </div>
 
         </div>
@@ -36,8 +57,5 @@
         <p class="lista-vacia">Todavía no hay películas cargadas.</p>
         }
     </div>
-    <button routerLink="/home">
-        IR AL HOME
-    </button>
 
 </section>

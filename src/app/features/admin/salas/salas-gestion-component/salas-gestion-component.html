@@ -1,0 +1,70 @@
+<section class="gestion-salas">
+
+    <div class="encabezado">
+        <h1 class="gestion-titulo">SALAS</h1>
+        <p class="gestion-sub">Creá y administrá las salas de LA12·CINEMA.</p>
+    </div>
+
+    <!-- CREAR SALA -->
+    <div class="crear-sala">
+        <h2 class="seccion-titulo">CREAR SALA</h2>
+
+        <div class="crear-form">
+            <input
+                class="input-sala"
+                type="text"
+                [(ngModel)]="nombreSalaNew"
+                placeholder="Nombre de la sala">
+
+            <button class="crear-btn" type="button" (click)="crearSala()">
+                CREAR SALA
+            </button>
+        </div>
+    </div>
+
+    <!-- LISTADO -->
+    <div class="lista-salas">
+        <h2 class="seccion-titulo">SALAS EXISTENTES</h2>
+
+        @if (salaService.cargando()) {
+            <p class="aviso-sala">Cargando salas...</p>
+        } @else {
+            @for (sala of salaService.salas(); track sala.id) {
+                <div class="sala">
+
+                    @if (salaEditando?.id === sala.id) {
+                        <input class="input-sala" type="text" [(ngModel)]="nombreEditado">
+
+                        <div class="acciones">
+                            <button class="guardar-btn" type="button" (click)="guardarEdicion()">
+                                GUARDAR
+                            </button>
+                            <button class="editar-btn" type="button" (click)="cancelarEdicion()">
+                                CANCELAR
+                            </button>
+                        </div>
+                    } @else {
+                        <h3 class="sala-nombre">{{ sala.nombre }}</h3>
+
+                        <div class="acciones">
+                            <button
+                                class="distribucion-btn"
+                                type="button"
+                                [routerLink]="['/admin/salas/distribucion', sala.id]">
+                                VER DISTRIBUCIÓN
+                            </button>
+                            <button class="editar-btn" type="button" (click)="editarSala(sala)">
+                                EDITAR
+                            </button>
+                            <button class="eliminar-btn" type="button" (click)="eliminarSala(sala.id!)">
+                                ELIMINAR
+                            </button>
+                        </div>
+                    }
+                </div>
+            } @empty {
+                <p class="aviso-sala">Todavía no hay salas cargadas.</p>
+            }
+        }
+    </div>
+</section>

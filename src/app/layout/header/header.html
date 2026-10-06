@@ -11,7 +11,7 @@
         @if (authService.currentPerfil()?.rol === 'admin' && !router.url.startsWith('/admin')) {
             <button
                 class="admin-btn"
-                routerLink="/admin/peliculas">
+                routerLink="/admin">
                 ADMIN
             </button>
         }
