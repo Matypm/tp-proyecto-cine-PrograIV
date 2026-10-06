@@ -15,22 +15,27 @@ export class AuthService {
     currentPerfil = signal<UsuarioInterface | null>(null);
     perfilCargado = signal(false);
 
-    constructor() {
+    private authInicializada: Promise<void>;
 
-        this.initAuthSession() // aca se "prenderia" la sesión
+    constructor() {
+        this.authInicializada = this.initAuthSession() // aca se "prenderia" la sesión
+
     }
 
-    private initAuthSession() {
-        this.supabase.auth.getSession().then(async ({ data: { session } }) => {
-            this.currentSession.set(session);
-            this.currentUser.set(session?.user ?? null); // si hay sesión, guardá el usuario de esa sesión; si no hay sesión, guardá null
+    private async initAuthSession(): Promise<void> {
 
-            if (session?.user) {
-                await this.cargarPerfil(session.user.id);
-            }
-        });
+        const { data: { session } } =
+            await this.supabase.auth.getSession();
+
+        this.currentSession.set(session);
+        this.currentUser.set(session?.user ?? null);
+
+        if (session?.user) {
+            await this.cargarPerfil(session.user.id);
+        }
 
         this.supabase.auth.onAuthStateChange((_event, session) => {
+
             this.currentSession.set(session);
             this.currentUser.set(session?.user ?? null);
 
@@ -38,8 +43,13 @@ export class AuthService {
                 this.cargarPerfil(session.user.id);
             } else {
                 this.currentPerfil.set(null);
+                this.perfilCargado.set(false);
             }
         });
+    }
+
+    async esperarInicializacion() {
+        await this.authInicializada;
     }
 
     async cargarPerfil(id: string) { // cargarPerfil me sirve para poder leer los datos de la tabla usuarios

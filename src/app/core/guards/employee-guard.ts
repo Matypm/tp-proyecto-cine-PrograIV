@@ -2,17 +2,18 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth-service';
 
-export const EmployeeGuard: CanActivateFn = () => {
+export const EmployeeGuard: CanActivateFn = async () => {
 
-  const authService = inject(AuthService);
-  const router = inject(Router);
+    const authService = inject(AuthService);
+    const router = inject(Router);
 
-  const perfil = authService.currentPerfil();
+    await authService.esperarInicializacion();
 
-  if (perfil?.rol === 'empleado') {
-    return true;
-  }
+    const perfil = authService.currentPerfil();
 
-  router.navigate(['/home']);
-  return false;
+    if (perfil?.rol === 'empleado') {
+        return true;
+    }
+
+    return router.createUrlTree(['/home']);
 };
