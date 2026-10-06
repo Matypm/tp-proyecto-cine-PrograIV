@@ -41,7 +41,7 @@ export class Login {
 
       switch(rol){
         case 'admin': 
-          this.router.navigate(['/admin/peliculas'])
+          this.router.navigate(['/admin'])
           break;
         case 'cliente':
           this.router.navigate(['/home'])

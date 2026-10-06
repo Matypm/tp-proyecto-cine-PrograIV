@@ -3,7 +3,7 @@ import { PeliculaService } from '../../../../core/services/pelicula-service';
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
-  imports: [RouterLink,],
+  imports: [RouterLink],
   selector: 'app-gestion-peliculas',
   styleUrl: './gestion-peliculas.css',
   templateUrl: './gestion-peliculas.html',

@@ -1,0 +1,133 @@
+<section class="gestion-funciones">
+
+    <div class="encabezado">
+        <h1 class="gestion-titulo">FUNCIONES</h1>
+        <p class="gestion-sub">Creá y consultá las funciones de LA12·CINEMA.</p>
+    </div>
+
+    <!-- CREAR FUNCIÓN -->
+    <section class="crear-funcion">
+        <h2 class="seccion-titulo">CREAR FUNCIÓN</h2>
+
+        <div class="form-funcion">
+
+            <!-- PELÍCULA -->
+            <div class="campo">
+                <label for="pelicula">Película</label>
+                <select id="pelicula" [value]="peliculaSeleccionada()"
+                    (change)="peliculaSeleccionada.set($any($event.target).value)">
+                    <option value="">Seleccioná una película</option>
+                    @for (pelicula of peliculas(); track pelicula.id) {
+                    <option [value]="pelicula.id">{{ pelicula.nombre }}</option>
+                    }
+                </select>
+            </div>
+
+            <!-- FECHA Y HORA -->
+            <div class="campo">
+                <label for="fecha">Fecha y hora</label>
+                <input id="fecha" type="text" placeholder="DD/MM/AAAA HH:MM" [value]="fechaHora()"
+                    (input)="fechaHora.set($any($event.target).value)">
+            </div>
+
+            <!-- FORMATO -->
+            <div class="campo">
+                <span class="campo-label">Formato</span>
+                <div class="opciones">
+                    <label class="opcion">
+                        <input type="radio" name="formato" value="2d" [checked]="formato() === '2d'"
+                            (change)="formato.set('2d')">
+                        <span>2D</span>
+                    </label>
+                    <label class="opcion">
+                        <input type="radio" name="formato" value="3d" [checked]="formato() === '3d'"
+                            (change)="formato.set('3d')">
+                        <span>3D</span>
+                    </label>
+                    <label class="opcion">
+                        <input type="radio" name="formato" value="4d" [checked]="formato() === '4d'"
+                            (change)="formato.set('4d')">
+                        <span>4D</span>
+                    </label>
+                    <label class="opcion">
+                        <input type="radio" name="formato" value="5d" [checked]="formato() === '5d'"
+                            (change)="formato.set('5d')">
+                        <span>5D</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- IDIOMA -->
+            <div class="campo">
+                <span class="campo-label">Idioma</span>
+                <div class="opciones">
+                    <label class="opcion">
+                        <input type="radio" name="idioma" value="castellano" [checked]="idioma() === 'castellano'"
+                            (change)="idioma.set('castellano')">
+                        <span>Castellano</span>
+                    </label>
+                    <label class="opcion">
+                        <input type="radio" name="idioma" value="subtitulada" [checked]="idioma() === 'subtitulada'"
+                            (change)="idioma.set('subtitulada')">
+                        <span>Subtitulada</span>
+                    </label>
+                </div>
+            </div>
+
+            <button class="crear-btn" type="button" (click)="crearFuncion()">
+               @if(editando()){
+                GUARDAR CAMBIOS
+            }
+            @else{
+                CREAR FUNCIÓN
+            }
+            </button>
+        </div>
+    </section>
+
+    <!-- LISTADO DE FUNCIONES -->
+    <section class="lista-funciones">
+        <h2 class="seccion-titulo">FUNCIONES CARGADAS</h2>
+
+        @if (cargando()) {
+        <p class="aviso-funcion">Cargando funciones...</p>
+        } 
+        @else {
+
+        @if (funciones().length === 0) {
+        <p class="aviso-funcion">No hay funciones cargadas.</p>
+        } 
+        @else {
+        <div class="funciones-grid">
+            @for (funcion of funciones(); track funcion.id) {
+            <div class="funcion">
+                <h3 class="funcion-pelicula">{{ funcion.peliculas?.nombre }}</h3>
+
+                <span class="funcion-fecha">
+                    {{ formatearFecha(funcion.fecha_hora) }}
+                    ·
+                    {{ formatearHora(funcion.fecha_hora) }}
+                </span>
+
+                <div class="funcion-datos">
+                    <span class="dato-chip">{{ funcion.salas?.nombre }}</span>
+                    <span class="dato-chip">{{ funcion.formato | uppercase }}</span>
+                    <span class="dato-chip">{{ funcion.idioma | uppercase}}</span>
+                </div>
+
+                <div class="funcion-acciones">
+                    <button class="editar-btn" type="button" (click)="editarFuncion(funcion)">
+                        EDITAR
+                    </button>
+
+                    <button class="eliminar-btn" type="button" (click)="eliminarFuncion(funcion.id!)">
+                        ELIMINAR
+                    </button>
+                </div>
+            </div>
+            }
+        </div>
+        }
+        }
+    </section>
+</section>

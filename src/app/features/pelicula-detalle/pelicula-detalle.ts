@@ -44,7 +44,7 @@ export class PeliculaDetalle {
     const dia = this.diaSeleccionado();
 
     // Acá filter() empieza a recorrer una por una las funciones.
-    return this.funciones().filter(funcion => { 
+    return this.funciones().filter(funcion => {
       // Se formatean las fechas y se comparan con el dia del Signal
       return this.formatearFormaDeFecha(funcion.fecha_hora).fecha === dia; //
     })
@@ -66,16 +66,16 @@ export class PeliculaDetalle {
     });
 
     effect(() => {
-        const funciones = this.funciones();
+      const funciones = this.funciones();
 
-        // Si tengo funciones cargadas y todavía no tengo ningún día seleccionado
-        if (funciones.length > 0 && !this.diaSeleccionado()) {
-            const primerDia = this.formatearFormaDeFecha(
-                funciones[0].fecha_hora
-            ).fecha;
+      // Si tengo funciones cargadas y todavía no tengo ningún día seleccionado
+      if (funciones.length > 0 && !this.diaSeleccionado()) {
+        const primerDia = this.formatearFormaDeFecha(
+          funciones[0].fecha_hora
+        ).fecha;
 
-            this.diaSeleccionado.set(primerDia);
-        }
+        this.diaSeleccionado.set(primerDia);
+      }
     });
   }
 
@@ -87,32 +87,41 @@ export class PeliculaDetalle {
   }
 
   formatearFormaDeHora(fechaHora: string): string {
-    const fecha = new Date(fechaHora); // convierte la hora q le pasa fechaHora en un objeto de tipo Date 
+    const fecha = new Date(fechaHora);
 
-    // toLocaleTimeString() significa, básicamente:
-    // "Dame la hora de este Date, pero formateada según una determinada configuración regional
+    if (isNaN(fecha.getTime())) {
+      return 'INVALID DATE';
+    }
+
     return fecha.toLocaleTimeString('es-AR', {
-      hour: '2-digit', // es para q la hora se muestre asi: 18, y no asi: 6
-      minute: '2-digit', // lo mismo aca, es para q los minuto se muestren asi: 05, y no asi: 5
-      hour12: false // es para q se muestre el formato 24hs, pq si por ej: quiero poner 18:00, sin el false se muestra asi 06:00 p.m.
+      timeZone: 'America/Argentina/Buenos_Aires',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
     });
   }
 
-  formatearFormaDeFecha(fechaHora: string): {dia: string, fecha: string} {
+  formatearFormaDeFecha(fechaHora: string): { dia: string; fecha: string } {
     const fecha = new Date(fechaHora);
 
-    const dia = fecha.toLocaleDateString('es-AR', {
-      weekday: 'short'
-    }).toUpperCase();
-
-    const fechaFormateada = fecha.toLocaleDateString('es-AR', {
-      day: '2-digit',
-      month: '2-digit'
-    })
+    if (isNaN(fecha.getTime())) {
+      return {
+        dia: 'INVALID DATE',
+        fecha: 'INVALID DATE'
+      };
+    }
 
     return {
-      dia: dia,
-      fecha: fechaFormateada
+      dia: fecha.toLocaleDateString('es-AR', {
+        timeZone: 'America/Argentina/Buenos_Aires',
+        weekday: 'short'
+      }).toUpperCase(),
+
+      fecha: fecha.toLocaleDateString('es-AR', {
+        timeZone: 'America/Argentina/Buenos_Aires',
+        day: '2-digit',
+        month: '2-digit'
+      })
     };
   }
 
@@ -154,26 +163,26 @@ export class PeliculaDetalle {
   }
 
   puedeComprar(): boolean {
-    const pelicula =  this.pelicula();
+    const pelicula = this.pelicula();
 
-    if(!pelicula){
+    if (!pelicula) {
       return false;
     }
 
     // Sin restriccion
-    if(pelicula.edad_restriccion === 0){
+    if (pelicula.edad_restriccion === 0) {
       return true;
     }
 
     // User anonimo
-    if(!this.currentUser()){
+    if (!this.currentUser()) {
       return true;
     }
 
     // Usuario registrado
     const perfil = this.currentPerfil();
 
-    if(!perfil?.fecha_nacimiento){
+    if (!perfil?.fecha_nacimiento) {
       return false;
     }
 
@@ -198,7 +207,7 @@ export class PeliculaDetalle {
     }
 
     return edad;
-  } 
+  }
 
 
 

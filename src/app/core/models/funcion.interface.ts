@@ -15,5 +15,5 @@ export interface FuncionInterface {
     salas?: {
     id: string;
     nombre: string;
-}
+    }
 }

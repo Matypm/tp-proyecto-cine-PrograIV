@@ -16,7 +16,6 @@ import QRCode from 'qrcode';
 })
 export class InformacionEntrada {
 
-  private supabase = inject(SupabaseService).client
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private destroyRef = inject(DestroyRef);

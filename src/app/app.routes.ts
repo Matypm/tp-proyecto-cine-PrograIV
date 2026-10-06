@@ -40,11 +40,15 @@ export const routes: Routes = [
     {path: 'perfil',
         loadComponent: () => import('./features/perfil/perfil-component/perfil-component').then(c => c.PerfilComponent)
     },
+
+    // RUTAS ADMIN
     {
         path: 'admin',
         canActivate: [AdminGuard],
         loadComponent: () => import('./features/admin/admin-dashboard-component/admin-dashboard-component').then(c => c.AdminDashboardComponent)
     },
+
+    // Peliculas Admin
     {
         path: 'admin/peliculas',
         canActivate: [AdminGuard],
@@ -60,6 +64,7 @@ export const routes: Routes = [
         canActivate: [AdminGuard],
         loadComponent: () => import('./features/admin/peliculas/editar-pelicula-component/editar-pelicula-component').then(c => c.EditarPeliculaComponent)
     },
+    // Salas admin
     {
         path: 'admin/salas',
         canActivate: [AdminGuard],
@@ -69,5 +74,19 @@ export const routes: Routes = [
         path: 'admin/salas/distribucion/:id',
         canActivate: [AdminGuard],
         loadComponent: () => import('./features/admin/salas/distribucion-sala/distribucion-sala').then(c => c.DistribucionSala)
+    },
+
+    // Funciones admin
+    {
+        path: 'admin/funciones',
+        canActivate: [AdminGuard],
+        loadComponent: () => import('./features/admin/funciones/gestion-funciones-component/gestion-funciones-component').then(c => c.GestionFuncionesComponent)
+    },
+
+    // Candybar admin
+    {
+        path: 'admin/candybar',
+        canActivate: [AdminGuard],
+        loadComponent: () => import('./features/admin/candy-bar/gestion-candybar/gestion-candybar').then(c => c.GestionCandybar)
     }
 ];

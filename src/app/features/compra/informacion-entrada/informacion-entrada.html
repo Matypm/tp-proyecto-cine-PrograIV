@@ -7,7 +7,7 @@
     <!-- para q muestre un solo qr si es q se compran mas de una butaca
      si no va a mostrar 3 qrs -->
     @if (compra.entradas[0]; as primera) {
-    <article class="ticket">
+    <div class="ticket">
 
         <div class="ticket-main">
             <img class="ticket-poster" [src]="primera.funciones.peliculas.imagen"
@@ -66,7 +66,7 @@
             </button>
         </div>
 
-    </article>
+    </div>
     }
 
     @if (compra.compras_productos?.length) {
