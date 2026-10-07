@@ -3,36 +3,36 @@
         <h1>LA12·CINEMA</h1>
     </div>
     <div class="header-actions">
-        @if (router.url === '/perfil' || router.url.startsWith('/admin')) {
-            <a routerLink="/home" class="btn-inicio">
-                INICIO
-            </a>
+        @if (
+        router.url === '/perfil' ||
+        router.url.startsWith('/admin') ||
+        router.url.startsWith('/empleado')
+        ) {
+        <a routerLink="/home" class="btn-inicio">
+            INICIO
+        </a>
+        }
+        @if (currentPerfil()?.rol === 'empleado') {
+        <a routerLink="/empleado" class="btn-inicio">
+            VALIDACIÓN
+        </a>
         }
         @if (authService.currentPerfil()?.rol === 'admin' && !router.url.startsWith('/admin')) {
-            <button
-                class="admin-btn"
-                routerLink="/admin">
-                ADMIN
-            </button>
+        <button class="admin-btn" routerLink="/admin">
+            ADMIN
+        </button>
         }
-        <button
-            class="perfil-btn"
-            (click)="irAlPerfil()">
+        <button class="perfil-btn" (click)="irAlPerfil()">
             MI PERFIL
         </button>
         @if (authService.currentUser()) {
-            <button
-                class="logout-btn"
-                (click)="logout()">
-                CERRAR SESIÓN
-            </button>
+        <button class="logout-btn" (click)="logout()">
+            CERRAR SESIÓN
+        </button>
         } @else {
-            <button
-                class="login-btn"
-                routerLink="/login"
-                routerLinkActive="active">
-                INICIAR SESIÓN
-            </button>
+        <button class="login-btn" routerLink="/login" routerLinkActive="active">
+            INICIAR SESIÓN
+        </button>
         }
     </div>
 </header>

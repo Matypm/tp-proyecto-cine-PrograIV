@@ -146,6 +146,27 @@
     color: white;
 }
 
+.btn-ver-entrada {
+    background: transparent;
+    border: 1px solid #ffffff;
+    color: #ffffff;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.btn-ver-entrada:hover {
+    background: #ffffff;
+    color: #12100d;
+}
+
+.btn-ver-entrada:active {
+    transform: scale(0.97);
+}
+
 /* Responsive (al final) */
 
 @media (max-width: 900px) {

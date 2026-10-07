@@ -1,0 +1,354 @@
+:host {
+    display: block;
+}
+
+.candybar-admin {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px 40px 60px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+.candybar,
+.categorias {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* Encabezado */
+
+.encabezado {
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgb(73, 73, 73);
+}
+
+.gestion-titulo {
+    margin: 0;
+    font-size: 22px;
+    letter-spacing: 1.5px;
+}
+
+.gestion-sub {
+    margin: 6px 0 0;
+    font-size: 14px;
+    color: #a8a8a8;
+}
+
+.seccion-titulo {
+    margin: 0 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgb(73, 73, 73);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #838383;
+}
+
+/* Formulario de producto */
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    max-width: 560px;
+}
+
+.formulario .seccion-titulo {
+    margin-bottom: 0;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.campo label {
+    color: #a8a8a8;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.campo input,
+.campo select,
+.formulario-categoria input {
+    width: 100%;
+    box-sizing: border-box;
+    background: #12100d;
+    color: white;
+    border: 1px solid rgb(73, 73, 73);
+    border-radius: 0;
+    padding: 14px 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    transition: 0.2s ease;
+}
+
+.campo input::placeholder,
+.formulario-categoria input::placeholder {
+    color: #666;
+}
+
+.campo input:focus,
+.campo select:focus,
+.formulario-categoria input:focus {
+    outline: none;
+    border-color: #c9a54b;
+}
+
+.campo select option {
+    background: #12100d;
+    color: white;
+}
+
+.acciones-formulario {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+/* Botones principales */
+
+.submit-btn {
+    padding: 16px 28px;
+    background: #3b6ea5;
+    color: white;
+    border: none;
+    border-radius: 0;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+.cancelar-form-btn {
+    padding: 16px 24px;
+    background: transparent;
+    color: #c9c9c9;
+    border: 1px solid rgb(73, 73, 73);
+    border-radius: 0;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.cancelar-form-btn:hover {
+    background: #232323;
+    color: white;
+}
+
+/* Lista de productos */
+
+.producto {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    background: #151515;
+    border: 1px solid rgb(60, 60, 60);
+    border-left: 3px solid #c9a54b;
+}
+
+.info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.producto-nombre {
+    margin: 0;
+    font-size: 17px;
+}
+
+.producto-categoria {
+    align-self: flex-start;
+    background: #232323;
+    border-left: 3px solid #c9a54b;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #c9c9c9;
+}
+
+.producto-precio {
+    flex-shrink: 0;
+    font-size: 18px;
+}
+
+/* Acciones */
+
+.acciones {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.editar-btn,
+.eliminar-btn {
+    padding: 10px 18px;
+    border-radius: 0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.editar-btn {
+    background: transparent;
+    color: #c9c9c9;
+    border: 1px solid rgb(73, 73, 73);
+}
+
+.editar-btn:hover {
+    background: #232323;
+    color: white;
+}
+
+.eliminar-btn {
+    background: #b8383c;
+    color: white;
+    border: 1px solid #b8383c;
+}
+
+.eliminar-btn:hover {
+    background: #9c2f33;
+    border-color: #9c2f33;
+}
+
+/* Categorías */
+
+.categorias-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.categorias-header .seccion-titulo {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 0;
+}
+
+.nueva-btn {
+    padding: 12px 20px;
+    background: transparent;
+    color: #6f9fd1;
+    border: 1px solid #3b6ea5;
+    border-radius: 0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.nueva-btn:hover {
+    background: #3b6ea5;
+    color: white;
+}
+
+.formulario-categoria {
+    display: flex;
+    gap: 10px;
+    max-width: 700px;
+}
+
+.formulario-categoria input {
+    flex: 1;
+    min-width: 0;
+}
+
+.formulario-categoria .submit-btn,
+.formulario-categoria .cancelar-form-btn {
+    flex-shrink: 0;
+    padding: 0 22px;
+}
+
+.lista-categorias {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.categoria {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 14px 18px;
+    background: #151515;
+    border: 1px solid rgb(60, 60, 60);
+    border-left: 3px solid rgb(90, 90, 90);
+}
+
+.categoria-nombre {
+    flex: 1;
+    min-width: 0;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+/* Avisos */
+
+.aviso {
+    margin: 0;
+    padding: 16px 14px;
+    background: #1a1712;
+    border-left: 3px solid #c9a54b;
+    color: #a8a8a8;
+    font-size: 14px;
+}
+
+/* Responsive (al final) */
+
+@media (max-width: 700px) {
+    .candybar-admin {
+        padding: 20px 16px 40px;
+    }
+
+    .producto {
+        flex-wrap: wrap;
+    }
+
+    .info {
+        flex: 1 1 60%;
+    }
+
+    .acciones {
+        width: 100%;
+    }
+
+    .editar-btn,
+    .eliminar-btn {
+        flex: 1;
+    }
+
+    .formulario-categoria {
+        flex-direction: column;
+    }
+
+    .formulario-categoria .submit-btn,
+    .formulario-categoria .cancelar-form-btn {
+        padding: 14px;
+    }
+
+    .categoria {
+        flex-wrap: wrap;
+    }
+}

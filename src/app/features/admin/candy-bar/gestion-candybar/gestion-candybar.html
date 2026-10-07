@@ -1,170 +1,131 @@
-<section class="candybar">
-    <div class="encabezado">
-        <div>
-            <h1>CANDY BAR</h1>
-            <p>Administrá los productos del Candy Bar.</p>
-        </div>
-    </div>
+<div class="candybar-admin">
 
-    <form (ngSubmit)="guardarProducto()" class="formulario">
-        <h2>
-            {{ editando() ? 'EDITAR PRODUCTO' : 'NUEVO PRODUCTO' }}
-        </h2>
+    <section class="candybar">
 
-        <div class="campo">
-            <label for="nombre">Nombre</label>
-
-            <input id="nombre" type="text" [ngModel]="nombre()" (ngModelChange)="nombre.set($event)" name="nombre"
-                placeholder="Ej: Pochoclos">
+        <div class="encabezado">
+            <h1 class="gestion-titulo">CANDY BAR</h1>
+            <p class="gestion-sub">Administrá los productos del Candy Bar.</p>
         </div>
 
-        <div class="campo">
-            <label for="categoria">Categoría</label>
-            <select id="categoria" [ngModel]="categoriaId()" (ngModelChange)="categoriaId.set($event)" name="categoria">
-                <option value="">Seleccioná una categoría</option>
+        <form class="formulario" (ngSubmit)="guardarProducto()">
+            <h2 class="seccion-titulo">
+                {{ editando() ? 'EDITAR PRODUCTO' : 'NUEVO PRODUCTO' }}
+            </h2>
 
-                @for (categoria of categorias(); track categoria.id) {
-                <option [value]="categoria.id">
-                    {{ categoria.nombre }}
-                </option>
+            <div class="campo">
+                <label for="nombre">Nombre</label>
+                <input id="nombre" type="text" [ngModel]="nombre()" (ngModelChange)="nombre.set($event)"
+                    name="nombre" placeholder="Ej: Pochoclos">
+            </div>
+
+            <div class="campo">
+                <label for="categoria">Categoría</label>
+                <select id="categoria" [ngModel]="categoriaId()" (ngModelChange)="categoriaId.set($event)"
+                    name="categoria">
+                    <option value="">Seleccioná una categoría</option>
+                    @for (categoria of categorias(); track categoria.id) {
+                        <option [value]="categoria.id">{{ categoria.nombre }}</option>
+                    }
+                </select>
+            </div>
+
+            <div class="campo">
+                <label for="precio">Precio</label>
+                <input id="precio" type="number" [ngModel]="precio()" (ngModelChange)="precio.set($event)"
+                    name="precio" min="1" placeholder="Ej: 3500">
+            </div>
+
+            <div class="acciones-formulario">
+                <button class="submit-btn" type="submit">
+                    {{ editando() ? 'GUARDAR CAMBIOS' : 'CREAR PRODUCTO' }}
+                </button>
+
+                @if (editando()) {
+                    <button class="cancelar-form-btn" type="button" (click)="limpiarFormulario()">
+                        CANCELAR
+                    </button>
                 }
-            </select>
-        </div>
+            </div>
+        </form>
 
-        <div class="campo">
-            <label for="precio">Precio</label>
-            <input 
-                id="precio" 
-                type="number" 
-                [ngModel]="precio()" 
-                (ngModelChange)="precio.set($event)" 
-                name="precio"
-                min="1" placeholder="Ej: 3500"
-            >
-        </div>
+        <div class="productos">
+            <h2 class="seccion-titulo">PRODUCTOS</h2>
 
-        <div class="acciones-formulario">
-            <button type="submit">
-                {{ editando() ? 'GUARDAR CAMBIOS' : 'CREAR PRODUCTO' }}
-            </button>
+            @for (producto of productos(); track producto.id) {
+                <div class="producto">
+                    <div class="info">
+                        <h3 class="producto-nombre">{{ producto.nombre }}</h3>
+                        <span class="producto-categoria">
+                            {{ categorias().find(c => c.id === producto.categoria_id)?.nombre }}
+                        </span>
+                    </div>
 
-            @if (editando()) {
-            <button type="button" (click)="limpiarFormulario()">
-                CANCELAR
-            </button>
+                    <strong class="producto-precio">${{ producto.precio }}</strong>
+
+                    <div class="acciones">
+                        <button class="editar-btn" type="button" (click)="editarProducto(producto.id!)">
+                            EDITAR
+                        </button>
+                        <button class="eliminar-btn" type="button" (click)="eliminarProducto(producto.id!)">
+                            ELIMINAR
+                        </button>
+                    </div>
+                </div>
+            } @empty {
+                <p class="aviso">No hay productos cargados.</p>
             }
         </div>
-    </form>
 
-    <div class="productos">
-        <h2>PRODUCTOS</h2>
+    </section>
 
-        @for (producto of productos(); track producto.id) {
-        <div class="producto">
-            <div class="info">
-                <h3>{{ producto.nombre }}</h3>
-                <p>
-                    Categoría:
-                    {{ categorias()
-                    .find(c => c.id === producto.categoria_id)?.nombre }}
-                </p>
-                <strong>
-                    ${{ producto.precio }}
-                </strong>
-            </div>
+    <section class="categorias">
 
-            <div class="acciones">
-                <button type="button" (click)="editarProducto(producto.id!)">
-                    EDITAR
-                </button>
+        <div class="categorias-header">
+            <h2 class="seccion-titulo">CATEGORÍAS</h2>
 
-                <button type="button" (click)="eliminarProducto(producto.id!)">
-                    ELIMINAR
-                </button>
-
-            </div>
+            <button class="nueva-btn" type="button" (click)="limpiarCategoria()">
+                + NUEVA CATEGORÍA
+            </button>
         </div>
-        } @empty {
 
-        <p>No hay productos cargados.</p>
+        <form class="formulario-categoria" (ngSubmit)="guardarCategoria()">
+            <input type="text" [ngModel]="nombreCategoria()" (ngModelChange)="nombreCategoria.set($event)"
+                name="nombreCategoria" placeholder="Nombre de la categoría">
 
-        }
-    </div>
-</section>
+            <button class="submit-btn" type="submit">
+                @if (editandoCategoria()) {
+                    GUARDAR CAMBIOS
+                } @else {
+                    CREAR CATEGORÍA
+                }
+            </button>
 
-<section class="categorias">
+            @if (editandoCategoria()) {
+                <button class="cancelar-form-btn" type="button" (click)="limpiarCategoria()">
+                    CANCELAR
+                </button>
+            }
+        </form>
 
-  <div class="categorias-header">
-    <h2>CATEGORÍAS</h2>
+        <div class="lista-categorias">
+            @for (categoria of categorias(); track categoria.id) {
+                <div class="categoria">
+                    <span class="categoria-nombre">{{ categoria.nombre }}</span>
 
-    <button
-      type="button"
-      (click)="limpiarCategoria()"
-    >
-      + NUEVA CATEGORÍA
-    </button>
-  </div>
-
-  <form
-    (ngSubmit)="guardarCategoria()"
-    class="formulario-categoria"
-  >
-
-    <input
-      type="text"
-      [ngModel]="nombreCategoria()"
-      (ngModelChange)="nombreCategoria.set($event)"
-      name="nombreCategoria"
-      placeholder="Nombre de la categoría"
-    >
-
-    <button type="submit">
-        @if(editandoCategoria()){
-            GUARDAR CAMBIOS
-        }
-        @else {
-            CREAR CATEGORÍA
-        }
-    </button>
-
-    @if (editandoCategoria()) {
-      <button
-        type="button"
-        (click)="limpiarCategoria()"
-      >
-        CANCELAR
-      </button>
-    }
-  </form>
-
-  <div class="lista-categorias">
-    @for (
-      categoria of categorias();
-      track categoria.id
-    ) {
-
-      <div class="categoria">
-        <span>{{ categoria.nombre }}</span>
-
-        <div class="acciones">
-          <button
-            type="button"
-            (click)="editarCategoria(categoria.id!)"
-          >
-            EDITAR
-          </button>
-
-          <button
-            type="button"
-            (click)="eliminarCategoria(categoria.id!)"
-          >
-            ELIMINAR
-          </button>
+                    <div class="acciones">
+                        <button class="editar-btn" type="button" (click)="editarCategoria(categoria.id!)">
+                            EDITAR
+                        </button>
+                        <button class="eliminar-btn" type="button" (click)="eliminarCategoria(categoria.id!)">
+                            ELIMINAR
+                        </button>
+                    </div>
+                </div>
+            } @empty {
+                <p class="aviso">No hay categorías cargadas.</p>
+            }
         </div>
-      </div>
 
-    } @empty {
-      <p>No hay categorías cargadas.</p>
-    }
-  </div>
-</section>
+    </section>
+
+</div>

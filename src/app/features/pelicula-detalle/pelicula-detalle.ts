@@ -4,9 +4,11 @@ import { Router } from '@angular/router';
 import { FuncionesService } from '../../core/services/funciones-service';
 import { CompraService } from '../../core/services/compra-service';
 import { AuthService } from '../../core/services/auth-service';
+import { ResenasService } from '../../core/services/resenas-service';
+import { DatePipe } from '@angular/common';
 
 @Component({
-  imports: [],
+  imports: [DatePipe],
   selector: 'app-pelicula-detalle',
   styleUrl: './pelicula-detalle.css',
   templateUrl: './pelicula-detalle.html',
@@ -18,15 +20,20 @@ export class PeliculaDetalle {
   private peliculaService = inject(PeliculaService);
   private funcionesService = inject(FuncionesService);
   private compraService = inject(CompraService);
+  private resenasService = inject(ResenasService);
   private router = inject(Router);
   private authService = inject(AuthService);
 
   currentUser = this.authService.currentUser;
   currentPerfil = this.authService.currentPerfil;
+  resenas = this.resenasService.resenas;
 
   diaSeleccionado = signal('');
   funcionSeleccionada = signal<string | null>(null);
   mensajeEdad = signal('');
+
+  estrellasSeleccionadas = signal(0);
+  comentario = signal('');
 
   // computed() obtiene la película correspondiente al ID de la ruta.
   // Si las películas del servicio cambian, este computed se actualiza.
@@ -55,10 +62,30 @@ export class PeliculaDetalle {
     return [...new Set(formatos)]; // Set elimina los repetidos
   });
 
+  promedioEstrellas = computed(() => {
+    const lista = this.resenas();
+
+    if (lista.length === 0) {
+      return 0;
+    }
+
+    const total = lista.reduce(
+      (suma, resena) => suma + resena.estrellas,
+      0
+    );
+
+    return total / lista.length;
+  });
+
   constructor() {
     effect(() => {
       const peliculaId = this.id();
       this.funcionesService.cargarFuncionesPorPelicula(peliculaId);
+    });
+
+    effect(() => {
+      const peliculaId = this.id();
+      this.resenasService.cargarResenas(peliculaId);
     });
 
     effect(() => {
@@ -208,6 +235,47 @@ export class PeliculaDetalle {
 
     return edad;
   }
+
+  async publicarResena(): Promise<void> {
+    const usuario = this.currentUser();
+    const peliculaId = this.id();
+
+    if (!usuario) {
+      return;
+    }
+
+    if (this.estrellasSeleccionadas() === 0) {
+      return;
+    }
+
+    if (!this.comentario().trim()) {
+      return;
+    }
+
+    const resultado = await this.resenasService.crearResena(
+      peliculaId,
+      usuario.id,
+      this.estrellasSeleccionadas(),
+      this.comentario().trim()
+    );
+
+    if (resultado) {
+      this.estrellasSeleccionadas.set(0);
+      this.comentario.set('');
+
+      await this.resenasService.cargarResenas(peliculaId);
+    }
+  }
+
+  async eliminarResena(id: string): Promise<void> {
+    const eliminada = await this.resenasService.eliminarResena(id);
+
+    if (eliminada) {
+      await this.resenasService.cargarResenas(this.id());
+    }
+  }
+
+
 
 
 

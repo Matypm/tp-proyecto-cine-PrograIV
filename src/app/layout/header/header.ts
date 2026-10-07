@@ -12,6 +12,7 @@ export class Header {
 
   authService = inject(AuthService);
   router = inject(Router);
+  currentPerfil = this.authService.currentPerfil;
 
   async logout(){
     await this.authService.signOut();

@@ -1,11 +1,12 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { PeliculaService } from '../../core/services/pelicula-service';
-import { Router, RouterOutlet, RouterLink } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { PeliculaCard } from '../../shared/component/pelicula-card/pelicula-card';
 import { SearhBar } from '../../shared/component/searh-bar/searh-bar';
+import { PeliculaMasVendidaInterface } from '../../core/models/pelicula-mas-vendida..interface';
 
 @Component({
-  imports: [PeliculaCard, SearhBar, RouterOutlet, RouterLink],
+  imports: [PeliculaCard, SearhBar, RouterOutlet],
   selector: 'app-home',
   styleUrl: './home.css',
   templateUrl: './home.html',
@@ -23,6 +24,7 @@ export class Home {
   // Estado q muta para el filtro de busqueda
   filtroBusqueda = signal('');
   filtroGenero = signal('');
+  top3MasVendidas = signal<PeliculaMasVendidaInterface[]>([]);
 
   // computed() - filtra las pelis segun el termino de la busqueda
   // Se recalcula solo cuando cambia filtroBusqueda o peliculas
@@ -30,11 +32,11 @@ export class Home {
 
     const palabra = this.filtroBusqueda().toLowerCase();
     const genero = this.filtroGenero();
-    
+
 
     return this.peliculas().filter(pelicula => {
 
-      const filtraNombre = 
+      const filtraNombre =
         !palabra ||
         pelicula.nombre.toLowerCase().includes(palabra);
 
@@ -43,25 +45,38 @@ export class Home {
         pelicula.pelicula_genero.some(pg =>
           pg.genero_id === genero
         );
-        // Uso some() porque solo necesito saber si existe AL MENOS un género que coincida con la búsqueda.
-        // A diferencia de filter(), que devuelve un nuevo array con las coincidencias,
-        // some() devuelve true/false y termina de recorrer cuando encuentra una coincidencia.
-      
-        return filtraNombre && filtraGenero
-      });
-  });
-    
+      // Uso some() porque solo necesito saber si existe AL MENOS un género que coincida con la búsqueda.
+      // A diferencia de filter(), que devuelve un nuevo array con las coincidencias,
+      // some() devuelve true/false y termina de recorrer cuando encuentra una coincidencia.
 
-  constructor(){
+      return filtraNombre && filtraGenero
+    });
+  });
+
+
+  constructor() {
     // effect() — ejecuta un efecto secundario cada vez que cambian los signals que lee
     effect(() => {
       console.log(`Filtro activo: "${this.filtroBusqueda()}" -> ${this.peliculasFiltradas().length} resultados`);
     })
+
+    this.cargarTop3MasVendidas();
   }
 
   // Navega a la pantalla donde se muestran los datos y funciones de la película
   verFunciones(peliculaId: string): void {
     this.router.navigate(['/home/pelicula', peliculaId]);
-}
+  }
+
+  async cargarTop3MasVendidas() {
+
+    const peliculas = await this.peliculaService.cargarTop3MasVendidas();
+
+    this.top3MasVendidas.set(peliculas);
+  }
+
+  peliculaPorId(id: string) {
+    return this.peliculas().find(p => p.id === id);
+  }
 
 }

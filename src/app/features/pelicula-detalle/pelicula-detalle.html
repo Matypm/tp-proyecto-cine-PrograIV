@@ -82,3 +82,83 @@
 
     </section>
 </div>
+
+<!-- RESEÑAS (afuera del contenedor, debajo de todo) -->
+<section class="resenas">
+
+    <div class="resenas-titulo">
+        <h2 class="seccion-titulo">RESEÑAS</h2>
+
+        @if (resenas().length > 0) {
+            <div class="promedio">
+                <span class="estrellas-promedio">★ {{ promedioEstrellas().toFixed(1) }}</span>
+                <span class="cantidad-resenas">({{ resenas().length }} reseñas)</span>
+            </div>
+        } @else {
+            <p class="sin-resenas">Todavía no hay reseñas.</p>
+        }
+    </div>
+
+    <!-- FORMULARIO -->
+    @if (currentUser()) {
+        <div class="form-resena">
+
+            <h3 class="form-titulo">DEJÁ TU RESEÑA</h3>
+
+            <div class="selector-estrellas">
+                @for (estrella of [1, 2, 3, 4, 5]; track estrella) {
+                    <button
+                        type="button"
+                        class="estrella-btn"
+                        [class.seleccionada]="estrella <= estrellasSeleccionadas()"
+                        (click)="estrellasSeleccionadas.set(estrella)">
+                        ★
+                    </button>
+                }
+            </div>
+
+            <textarea
+                class="resena-textarea"
+                [value]="comentario()"
+                (input)="comentario.set($any($event.target).value)"
+                placeholder="Escribí tu opinión sobre la película..."></textarea>
+
+            <button
+                type="button"
+                class="publicar-resena-btn"
+                [disabled]="estrellasSeleccionadas() === 0 || !comentario().trim()"
+                (click)="publicarResena()">
+                PUBLICAR RESEÑA
+            </button>
+        </div>
+    }
+
+    <!-- LISTA DE RESEÑAS -->
+    <div class="lista-resenas">
+        @for (resena of resenas(); track resena.id) {
+            <div class="resena">
+
+                <div class="resena-cabecera">
+                    <span class="resena-estrellas">
+                        @for (estrella of [1, 2, 3, 4, 5]; track estrella) {
+                            <span [class.vacia]="estrella > resena.estrellas">★</span>
+                        }
+                    </span>
+
+                    @if (resena.usuario_id === currentUser()?.id) {
+                        <button type="button" class="eliminar-resena" (click)="eliminarResena(resena.id!)">
+                            ELIMINAR
+                        </button>
+                    }
+                </div>
+                <p class="resena-comentario">{{ resena.comentario }}</p>
+
+                @if (resena.created_at) {
+                    <small class="resena-fecha">
+                        {{ resena.created_at | date:'dd/MM/yyyy' }}
+                    </small>
+                }
+            </div>
+        }
+    </div>
+</section>

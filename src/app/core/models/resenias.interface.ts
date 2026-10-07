@@ -2,7 +2,7 @@ export interface ReseniaInterface {
     id?: string;
     pelicula_id: string;
     usuario_id: string;
-    cantEstrellas: number;
+    estrellas: number;
     comentario: string;
     created_at?: string
 }

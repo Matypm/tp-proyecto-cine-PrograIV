@@ -1,168 +1,149 @@
 <div class="empleado">
+
     <header class="empleado-header">
-        <h1>VALIDACIÓN</h1>
-        <p>
-            Ingresá el código de la compra para validar la entrada
-            o entregar el Candy Bar.
+        <h1 class="gestion-titulo">VALIDACIÓN</h1>
+        <p class="gestion-sub">
+            Ingresá el código de la compra para validar la entrada o entregar el Candy Bar.
         </p>
     </header>
 
     <section class="busqueda">
-        <label for="codigo">
-            Código de compra
-        </label>
+        <label for="codigo">Código de compra</label>
 
         <button type="button" class="escanear" (click)="abrirEscaner()">
             📷 ESCANEAR QR
         </button>
 
         @if (escaneando()) {
-        <div class="scanner">
-            <zxing-scanner 
-                [formats]="formatosPermitidos" 
-                (scanSuccess)="codigoEscaneado($event)"
-            >
-            </zxing-scanner>
+            <div class="scanner">
+                <zxing-scanner
+                    [formats]="formatosPermitidos"
+                    (scanSuccess)="codigoEscaneado($event)">
+                </zxing-scanner>
 
-            <button 
-                type="button" 
-                class="cerrar-scanner" 
-                (click)="cerrarEscaner()">
-                CERRAR ESCÁNER
-            </button>
-        </div>
+                <button type="button" class="cerrar-scanner" (click)="cerrarEscaner()">
+                    CERRAR ESCÁNER
+                </button>
+            </div>
         }
 
         <div class="busqueda-form">
-            <input id="codigo" type="text" [value]="codigo()" (input)="codigo.set($any($event.target).value)"
+            <input id="codigo" type="text" [value]="codigo()"
+                (input)="codigo.set($any($event.target).value)"
                 placeholder="Ingresá el código">
-            <button type="button" (click)="buscarCompra()">
+            <button type="button" class="buscar-btn" (click)="buscarCompra()">
                 BUSCAR
             </button>
         </div>
     </section>
 
     @if (mensaje()) {
-    <div class="mensaje">
-        {{ mensaje() }}
-    </div>
+        <div class="mensaje" role="alert">{{ mensaje() }}</div>
     }
 
     @if (compra(); as compra) {
-    <section class="compra">
-        <div class="compra-header">
-            <h2>COMPRA ENCONTRADA</h2>
+        <section class="compra">
+
+            <div class="compra-header">
+                <h2 class="seccion-titulo">COMPRA ENCONTRADA</h2>
+
+                @if (qrConsumido()) {
+                    <span class="estado-consumido">QR UTILIZADO</span>
+                } @else {
+                    <div class="estado-pendiente">
+                        @if (tieneEntrada()) {
+                            @if (compra.entrada_validada) {
+                                <span class="estado-chip ok">✓ Entrada validada</span>
+                            } @else {
+                                <span class="estado-chip pendiente">• Entrada pendiente</span>
+                            }
+                        }
+
+                        @if (tieneCandybar()) {
+                            @if (compra.candybar_retirado) {
+                                <span class="estado-chip ok">✓ Candy Bar retirado</span>
+                            } @else {
+                                <span class="estado-chip pendiente">• Candy Bar pendiente</span>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+
+            <!-- ENTRADA -->
+            @if (tieneEntrada()) {
+                @if (compra.entradas[0]; as primera) {
+                    <div class="bloque">
+                        <h3 class="bloque-titulo">🎬 ENTRADA</h3>
+
+                        <div class="dato">
+                            <span class="dato-label">Película</span>
+                            <span class="dato-valor">{{ primera.funciones.peliculas.nombre }}</span>
+                        </div>
+
+                        <div class="dato">
+                            <span class="dato-label">Función</span>
+                            <span class="dato-valor">
+                                {{ primera.funciones.fecha_hora | date:'dd/MM/yyyy HH:mm' }}
+                            </span>
+                        </div>
+
+                        <div class="dato">
+                            <span class="dato-label">Butacas</span>
+                            <div class="butacas">
+                                @for (entrada of compra.entradas; track entrada.id) {
+                                    <span class="butaca">
+                                        {{ entrada.butacas.fila }}{{ entrada.butacas.columna }}
+                                    </span>
+                                }
+                            </div>
+                        </div>
+
+                        @if (compra.entrada_validada) {
+                            <div class="estado-ok">✓ Entrada ya validada</div>
+                        } @else {
+                            <button type="button" class="accion" (click)="validarEntrada()">
+                                VALIDAR ENTRADA
+                            </button>
+                        }
+                    </div>
+                }
+            }
+
+            <!-- CANDY BAR -->
+            @if (tieneCandybar()) {
+                <div class="bloque">
+                    <h3 class="bloque-titulo">🍿 CANDY BAR</h3>
+
+                    @for (producto of compra.compras_productos; track producto.producto_id) {
+                        <div class="producto">
+                            <span class="producto-cantidad">{{ producto.cantidad }} ×</span>
+                            <span>{{ producto.productos_candy.nombre }}</span>
+                        </div>
+                    }
+
+                    @if (compra.candybar_retirado) {
+                        <div class="estado-ok">✓ Candy Bar ya retirado</div>
+                    } @else {
+                        <button type="button" class="accion" (click)="retirarCandybar()">
+                            ENTREGAR CANDY BAR
+                        </button>
+                    }
+                </div>
+            }
+
+            <!-- COMPRA COMPLETAMENTE CONSUMIDA -->
             @if (qrConsumido()) {
-            <span class="estado-consumido">
-                QR UTILIZADO
-            </span>
+                <div class="compra-finalizada">
+                    <strong>QR UTILIZADO</strong>
+                    <span>Esta compra ya fue completamente consumida.</span>
+                </div>
             }
-            @else {
-            <div class="estado-pendiente">
-                @if (tieneEntrada()) {
-                @if (compra.entrada_validada) {
-                <span>
-                    ✓ Entrada validada
-                </span>
-                }
-                @else {
-                <span>
-                    • Entrada pendiente
-                </span>
-                }
-                }
 
-                @if (tieneCandybar()) {
-                @if (compra.candybar_retirado) {
-                <span>
-                    ✓ Candy Bar retirado
-                </span>
-                }
-                @else {
-                <span>
-                    • Candy Bar pendiente
-                </span>
-                }
-                }
-            </div>
-            }
-        </div>
-
-        <!-- ENTRADA -->
-        @if (tieneEntrada()) {
-        @if (compra.entradas[0]; as primera) {
-        <div class="bloque">
-            <h3>🎬 ENTRADA</h3>
-            <p>
-                <strong>Película:</strong>
-                {{ primera.funciones.peliculas.nombre }}
-            </p>
-
-            <p>
-                <strong>Función:</strong>
-                {{ primera.funciones.fecha_hora | date:'dd/MM/yyyy HH:mm' }}
-            </p>
-
-            <p>
-                <strong>Butacas:</strong>
-                @for (entrada of compra.entradas; track entrada.id) {
-                <span class="butaca">
-                    {{ entrada.butacas.fila }}{{ entrada.butacas.columna }}
-                </span>
-                }
-            </p>
-
-            @if (compra.entrada_validada) {
-            <div class="estado-ok">
-                ✓ Entrada ya validada
-            </div>
-            } @else {
-            <button type="button" class="accion" (click)="validarEntrada()">
-                VALIDAR ENTRADA
+            <button type="button" class="limpiar" (click)="limpiar()">
+                NUEVA VALIDACIÓN
             </button>
-            }
-        </div>
-        }
-        }
 
-        <!-- CANDY BAR -->
-        @if (tieneCandybar()) {
-        <div class="bloque">
-            <h3>🍿 CANDY BAR</h3>
-            @for (
-            producto of compra.compras_productos; track producto.producto_id) {
-            <div class="producto">
-                <span>
-                    {{ producto.cantidad }} ×
-                    {{ producto.productos_candy.nombre }}
-                </span>
-            </div>
-            }
-
-            @if (compra.candybar_retirado) {
-            <div class="estado-ok">
-                ✓ Candy Bar ya retirado
-            </div>
-            } @else {
-            <button type="button" class="accion" (click)="retirarCandybar()">
-                ENTREGAR CANDY BAR
-            </button>
-            }
-        </div>
-        }
-
-        <!-- COMPRA COMPLETAMENTE CONSUMIDA -->
-        @if (qrConsumido()) {
-        <div class="compra-finalizada">
-            <strong>QR UTILIZADO</strong>
-            <span>
-                Esta compra ya fue completamente consumida.
-            </span>
-        </div>
-        }
-        <button type="button" class="limpiar" (click)="limpiar()">
-            NUEVA VALIDACIÓN
-        </button>
-    </section>
+        </section>
     }
 </div>

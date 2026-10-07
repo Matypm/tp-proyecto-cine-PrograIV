@@ -4,6 +4,7 @@ import { PeliculasInterface } from '../models/pelicula.interface';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { PeliculaGenerosInterface } from '../models/peliculas_generos.interface';
 import { GeneroInterface } from '../models/genero.interface';
+import { PeliculaMasVendidaInterface } from '../models/pelicula-mas-vendida..interface';
 
 @Injectable({
     providedIn: 'root'
@@ -291,17 +292,17 @@ export class PeliculaService {
 
         const hayFunciones = await this.hayFunciones(id);
 
-        if(hayFunciones){
+        if (hayFunciones) {
             console.error('No se puede eliminar la pelicula, tiene funciones');
             return false;
         }
 
         const { error: errorEliminar } = await this.supabase
-        .from('peliculas')
-        .delete()
-        .eq('id', id);
+            .from('peliculas')
+            .delete()
+            .eq('id', id);
 
-        if(errorEliminar){
+        if (errorEliminar) {
             console.error('Error al eliminar la pelicula: ', errorEliminar);
             return false;
         }
@@ -325,6 +326,95 @@ export class PeliculaService {
         return data.length > 0;
     }
 
+    async cargarTop3MasVendidas(): Promise<PeliculaMasVendidaInterface[]> {
 
+        // Obtener las entradas vendidas
+        const { data: entradas, error: errorEntradas } =
+            await this.supabase
+                .from('entradas')
+                .select('funcion_id');
+
+        if (errorEntradas) {
+            console.error('Error al cargar las entradas:', errorEntradas);
+            return [];
+        }
+
+
+        // Obtener las funciones relacionadas con esas entradas
+        const funcionesIds = entradas.map(
+            entrada => entrada.funcion_id
+        );
+
+        const { data: funciones, error: errorFunciones } =
+            await this.supabase
+                .from('funciones')
+                .select('id, pelicula_id')
+                .in('id', funcionesIds);
+
+        if (errorFunciones) {
+            console.error('Error al cargar las funciones:', errorFunciones);
+            return [];
+        }
+
+
+        // Contar las entradas de cada película
+        const cantidades = new Map<string, number>();
+
+        for (const entrada of entradas) {
+
+            const funcion = funciones.find(
+                funcion => funcion.id === entrada.funcion_id
+            );
+
+            if (!funcion) {
+                continue;
+            }
+
+            const cantidadActual =
+                cantidades.get(funcion.pelicula_id) ?? 0;
+
+            cantidades.set(
+                funcion.pelicula_id,
+                cantidadActual + 1
+            );
+        }
+
+
+        // Obtener los IDs de las películas
+        const peliculasIds = Array.from(cantidades.keys());
+
+        const { data: peliculas, error: errorPeliculas } =
+            await this.supabase
+                .from('peliculas')
+                .select('id, nombre, imagen')
+                .in('id', peliculasIds);
+
+        if (errorPeliculas) {
+            console.error('Error al cargar las películas:', errorPeliculas);
+            return [];
+        }
+
+
+        // Armar el resultado
+        const peliculasVendidas: PeliculaMasVendidaInterface[] =
+            peliculas.map(pelicula => ({
+                pelicula_id: pelicula.id,
+                nombre: pelicula.nombre,
+                imagen: pelicula.imagen,
+                entradas_vendidas:
+                    cantidades.get(pelicula.id) ?? 0
+            }));
+
+
+        // Ordenar de mayor a menor
+        peliculasVendidas.sort(
+            (a, b) =>
+                b.entradas_vendidas - a.entradas_vendidas
+        );
+
+
+        // Obtener solamente las 3 primeras
+        return peliculasVendidas.slice(0, 3);
+    }
 
 }

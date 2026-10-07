@@ -1,13 +1,45 @@
 <section class="home-container">
-    <h2>PELÍCULAS EN CARTELERA</h2>
 
-    <!-- Dsp incorporar la barra de busqueda -->
-    <app-searh-bar [(palabra)]="filtroBusqueda" [(genero)]="filtroGenero" [generos]="generos()" />
+    <!-- MÁS VENDIDAS -->
+    <section class="mas-vendidas">
+        <h2 class="seccion-titulo">MÁS VENDIDAS</h2>
 
-    <div class="peliculas-grid">
-        @for (pelicula of peliculasFiltradas(); track pelicula.id) {
-        <app-pelicula-card [pelicula]="pelicula" (seleccionada)="verFunciones($event)" />
-        }
-    </div>
+        <div class="peliculas-grid">
+            @for (item of top3MasVendidas(); track item.pelicula_id; let i = $index) {
+                <div class="mas-vendida-item">
+                    <span class="ranking-badge">{{ i + 1 }}</span>
+
+                    @if (peliculaPorId(item.pelicula_id); as pelicula) {
+                        <app-pelicula-card
+                            [pelicula]="pelicula"
+                            (seleccionada)="verFunciones($event)" />
+                    }
+
+                    <span class="vendidas-chip">
+                        {{ item.entradas_vendidas }} entradas vendidas
+                    </span>
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- CARTELERA -->
+    <section class="cartelera">
+        <h2 class="seccion-titulo">PELÍCULAS EN CARTELERA</h2>
+
+        <app-searh-bar
+            [(palabra)]="filtroBusqueda"
+            [(genero)]="filtroGenero"
+            [generos]="generos()" />
+
+        <div class="peliculas-grid">
+            @for (pelicula of peliculasFiltradas(); track pelicula.id) {
+                <app-pelicula-card
+                    [pelicula]="pelicula"
+                    (seleccionada)="verFunciones($event)" />
+            }
+        </div>
+    </section>
+
 </section>
 <router-outlet></router-outlet>

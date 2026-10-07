@@ -1,7 +1,7 @@
 .detalle-container {
     display: flex;
     gap: 180px;
-    padding-bottom: 100px; /* espacio para el botón fijo */
+    padding-bottom: 40px;
 }
 
 /* INFO DE LA PELÍCULA */
@@ -190,6 +190,8 @@
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
 }
 
+/* AVISO DE EDAD */
+
 .aviso-edad {
     display: flex;
     align-items: center;
@@ -231,6 +233,8 @@
     color: white;
 }
 
+/* MENSAJE DE ERROR */
+
 .mensaje-error {
     display: flex;
     align-items: center;
@@ -260,6 +264,216 @@
     color: #ff9a9d;
     font-size: 13px;
     line-height: 1.4;
+}
+
+/* RESEÑAS */
+
+.resenas {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 40px 100px; /* el espacio de abajo es para el botón fijo */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+/* Título + promedio */
+
+.resenas-titulo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgb(73, 73, 73);
+}
+
+.seccion-titulo {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #838383;
+}
+
+.promedio {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.estrellas-promedio {
+    font-size: 18px;
+    font-weight: bold;
+    color: #c9a54b;
+}
+
+.cantidad-resenas {
+    font-size: 13px;
+    color: #a8a8a8;
+}
+
+.sin-resenas {
+    margin: 0;
+    font-size: 13px;
+    color: #a8a8a8;
+}
+
+/* Formulario de reseña */
+
+.form-resena {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 20px;
+    background: #151515;
+    border: 1px solid rgb(60, 60, 60);
+    border-left: 3px solid #c9a54b;
+}
+
+.form-titulo {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #a8a8a8;
+}
+
+.selector-estrellas {
+    display: flex;
+    gap: 4px;
+}
+
+.estrella-btn {
+    padding: 0;
+    background: none;
+    border: none;
+    font-size: 28px;
+    line-height: 1;
+    color: #3a3a3a;
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+.estrella-btn:hover {
+    transform: scale(1.15);
+}
+
+.estrella-btn.seleccionada {
+    color: #c9a54b;
+}
+
+.resena-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 110px;
+    resize: vertical;
+    background: #12100d;
+    color: white;
+    border: 1px solid rgb(73, 73, 73);
+    border-radius: 0;
+    padding: 14px 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    transition: 0.2s ease;
+}
+
+.resena-textarea::placeholder {
+    color: #666;
+}
+
+.resena-textarea:focus {
+    outline: none;
+    border-color: #c9a54b;
+}
+
+.publicar-resena-btn {
+    align-self: flex-end;
+    padding: 14px 28px;
+    background: #3b6ea5;
+    color: white;
+    border: none;
+    border-radius: 0;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+.publicar-resena-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Lista de reseñas */
+
+.lista-resenas {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.resena {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px 18px;
+    background: #151515;
+    border: 1px solid rgb(60, 60, 60);
+    border-left: 3px solid rgb(90, 90, 90);
+}
+
+.resena-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.resena-estrellas {
+    font-size: 16px;
+    letter-spacing: 2px;
+    color: #c9a54b;
+}
+
+.resena-estrellas .vacia {
+    color: #3a3a3a;
+}
+
+.eliminar-resena {
+    padding: 6px 12px;
+    background: transparent;
+    color: #ff9a9d;
+    border: 1px solid #b8383c;
+    border-radius: 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.eliminar-resena:hover {
+    background: #b8383c;
+    color: white;
+}
+
+.resena-comentario {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #c9c9c9;
+    overflow-wrap: anywhere;
+}
+
+.resena-fecha {
+    font-size: 12px;
+    color: #838383;
 }
 
 /* Media queries Responsive (siempre al final) */
@@ -322,5 +536,20 @@
         left: 20px;
         right: 20px;
         bottom: 20px;
+    }
+
+    /* Reseñas */
+
+    .resenas {
+        padding: 0 16px 100px;
+        margin-top: 30px;
+    }
+
+    .form-resena {
+        padding: 16px;
+    }
+
+    .publicar-resena-btn {
+        align-self: stretch;
     }
 }
